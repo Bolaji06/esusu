@@ -1,4 +1,3 @@
-
 "use server";
 
 import prisma from "@/src/lib/prisma";
@@ -78,7 +77,7 @@ export async function getAllPicks() {
       },
     });
 
-    return picks.map(p => p.number);
+    return picks.map((p) => p.number);
   } catch (error) {
     console.error("Error getting all picks:", error);
     return [];
@@ -101,7 +100,7 @@ export async function getAllUserPicks() {
       },
     });
 
-    return picks.map(pick => ({
+    return picks.map((pick) => ({
       id: pick.id,
       number: pick.number,
       userName: pick.user.fullName,
@@ -116,8 +115,8 @@ export async function getAllUserPicks() {
 
 export async function getPicksStats() {
   try {
-    // Get current game settings to know total numbers
-    const settings = await prisma.gameSettings.findFirst({
+    // Get current number settings to know total numbers
+    const settings = await prisma.numberSettings.findFirst({
       where: { isActive: true },
     });
 
@@ -130,7 +129,7 @@ export async function getPicksStats() {
       totalUsers,
       totalPicks,
       availableNumbers,
-      totalNumbers, // Add this so we have it available
+      totalNumbers,
     };
   } catch (error) {
     console.error("Error getting stats:", error);
