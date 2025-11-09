@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Users, CheckCircle, Clock } from "lucide-react";
 import AdminSettings from "./AdminSettings";
+import { div } from "framer-motion/client";
 
 interface UserPick {
   id: string;
@@ -53,7 +54,10 @@ export default function AdminPanel({ userPicks, stats, totalNumbers }: Props) {
             Admin Panel
           </h2>
         </div>
-        <AdminSettings currentTotal={totalNumbers} pickedCount={stats.totalPicks} />
+        <AdminSettings
+          currentTotal={totalNumbers}
+          pickedCount={stats.totalPicks}
+        />
         <p className="text-sm text-gray-500 mt-3">
           Overview of all number picks
         </p>
@@ -94,7 +98,7 @@ export default function AdminPanel({ userPicks, stats, totalNumbers }: Props) {
           Recent Picks ({userPicks.length})
         </h3>
 
-        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
           {userPicks.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <p>No picks yet</p>
@@ -106,7 +110,8 @@ export default function AdminPanel({ userPicks, stats, totalNumbers }: Props) {
                 key={pick.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-indigo-300 transition-colors"
+                className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-indigo-300 transition-colors
+                "
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
