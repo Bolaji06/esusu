@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/src/lib/prisma";
+import prisma from "./lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export async function pickNumber(userId: string, number: number) {
@@ -57,7 +57,7 @@ export async function pickNumber(userId: string, number: number) {
 }
 
 export async function getUserPick(userId: string) {
-  try {
+  try {  
     const pick = await prisma.numberPick.findUnique({
       where: { userId },
     });
@@ -141,3 +141,5 @@ export async function getPicksStats() {
     };
   }
 }
+
+
