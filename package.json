@@ -5,8 +5,9 @@
   "scripts": {
     "start": "next start",
     "lint": "eslint",
-    "dev": "next dev",
-    "build": "next build"
+    "dev": "prisma generate && next dev --turbo",
+    "build": "prisma generate && next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
