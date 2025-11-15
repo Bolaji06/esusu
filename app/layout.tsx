@@ -14,13 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Esusu',
+  title: 'Ajo',
   description: 'Join contribution cycles',
   manifest: '/manifest.json',
   themeColor: '#4f46e5',
   icons: {
-    icon: '/icons/icon-192.png',
-    apple: '/icons/icon-192.png',
+    icon: '/icons/android-chrome-192x192.png',
+    apple: '/icons/android-chrome-512x512.png',
   },
 };
 
