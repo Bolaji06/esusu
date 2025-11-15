@@ -31,6 +31,11 @@ export default function DashboardNav({ user }: Props) {
   const navItems = [
     { href: "/dashboard", icon: Home, label: "Dashboard" },
     { href: "/dashboard/profile", icon: User, label: "Profile" },
+    // {
+    //   href: "/dashboard/contributions",
+    //   icon: CreditCard,
+    //   label: "Contributions",
+    // },
     {
       href: "/dashboard/contributions",
       icon: CreditCard,
@@ -53,9 +58,9 @@ export default function DashboardNav({ user }: Props) {
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">E</span>
+              <span className="text-white font-bold text-lg">A</span>
             </div>
-            <span className="font-bold text-xl text-gray-800">Esusu</span>
+            <span className="font-bold text-xl text-gray-800">Ajo</span>
           </Link>
 
           {/* Desktop Navigation */}
