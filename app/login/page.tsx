@@ -20,7 +20,7 @@ export default async function LoginPage() {
             <LogIn className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
-            Welcome Back
+            M&Z Contribution
           </h1>
           <p className="text-gray-600">
             Sign in to continue your contribution journey
