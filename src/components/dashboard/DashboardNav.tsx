@@ -14,6 +14,10 @@ import {
   Menu,
   X,
   Shield,
+  Users,
+  DollarSign,
+  Activity,
+  Outdent,
 } from "lucide-react";
 import { logout } from "@/src/actions/auth";
 
@@ -41,6 +45,11 @@ export default function DashboardNav({ user }: Props) {
       icon: CreditCard,
       label: "Contributions",
     },
+    {
+      href: "/dashboard/opts-out",
+      icon: Outdent,
+      label: "Opt Out",
+    },
     { href: "/dashboard/payouts", icon: TrendingUp, label: "Payouts" },
     ...(user.isAdmin
       ? [{ href: "/dashboard/admin", icon: Shield, label: "Admin Panel" }]
@@ -57,10 +66,12 @@ export default function DashboardNav({ user }: Props) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">A</span>
+            <div className="w-10 h-10 p-3 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-lg px-3">M</span>
             </div>
-            <span className="font-bold text-xl text-gray-800">Ajo</span>
+            <span className="font-bold text-xl text-gray-800">
+              M&Z Monthly Contribution
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
