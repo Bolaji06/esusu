@@ -135,7 +135,7 @@ export default function DashboardOverview({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex justify-between items-center"
+          className="flex flex-col md:flex-row justify-between  md:items-center"
         >
           <div>
             <h1 className="text-3xl font-bold mb-2">
@@ -148,7 +148,7 @@ export default function DashboardOverview({
             </p>
           </div>
 
-          <div>
+          <div className="py-4 md:py-0">
             <p>
               Account Number:{" "}
               <span className="font-semibold tracking-wider">177379076</span>
