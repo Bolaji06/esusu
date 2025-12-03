@@ -55,7 +55,7 @@ export default function PWAInstallPrompt() {
               <Download className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">Install Esusu</h3>
+              <h3 className="font-semibold text-gray-900">Install M&Z Contribution</h3>
               <p className="text-sm text-gray-600">Add to your home screen</p>
             </div>
           </div>

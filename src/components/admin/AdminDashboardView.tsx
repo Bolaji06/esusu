@@ -133,7 +133,7 @@ export default function AdminDashboardView({
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
           Admin Dashboard
         </h1>
-        <p className="text-gray-600">Manage your Esusu contribution system</p>
+        <p className="text-gray-600">Manage your contribution system</p>
       </motion.div>
 
       {/* Alert for unverified payments */}

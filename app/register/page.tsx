@@ -20,7 +20,7 @@ export default async function RegisterPage() {
             <Sparkles className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">
-            Join Esusu
+            Join M&Z Contribution
           </h1>
           <p className="text-gray-600">
             Create your account and start your contribution journey

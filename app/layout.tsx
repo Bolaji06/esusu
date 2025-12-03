@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Esusu",
+    title: "M&Z",
   },
   icons: {
     icon: "/icon-192.png",
@@ -48,13 +48,13 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="application-name" content="Esusu" />
+        <meta name="application-name" content="M&Z" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        <meta name="apple-mobile-web-app-title" content="Esusu" />
+        <meta name="apple-mobile-web-app-title" content="M&Z" />
         <meta name="msapplication-TileColor" content="#4f46e5" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <link rel="mask-icon" href="/icon-maskable.png" color="#4f46e5" />
