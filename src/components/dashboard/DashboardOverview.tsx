@@ -135,15 +135,31 @@ export default function DashboardOverview({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="flex justify-between items-center"
         >
-          <h1 className="text-3xl font-bold mb-2">
-            Welcome back, {data.user.fullName.split(" ")[0]}! 👋
-          </h1>
-          <p className="text-indigo-100">
-            {data.activeParticipation
-              ? `You're currently participating in ${data.activeParticipation.cycleName}`
-              : "Ready to join a contribution cycle?"}
-          </p>
+          <div>
+            <h1 className="text-3xl font-bold mb-2">
+              Welcome back, {data.user.fullName.split(" ")[0]}! 👋
+            </h1>
+            <p className="text-indigo-100">
+              {data.activeParticipation
+                ? `You're currently participating in ${data.activeParticipation.cycleName}`
+                : "Ready to join a contribution cycle?"}
+            </p>
+          </div>
+
+          <div>
+            <p>
+              Account Number:{" "}
+              <span className="font-semibold tracking-wider">177379076</span>
+            </p>
+            <p>
+              Account Name: <span>M&Z General Business</span>
+            </p>
+            <p>
+              Bank Name: <span>Access Bank</span>
+            </p>
+          </div>
         </motion.div>
       </div>
 
