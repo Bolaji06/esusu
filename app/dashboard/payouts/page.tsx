@@ -11,10 +11,16 @@ export default async function UserPayoutsPage() {
     redirect("/login");
   }
 
-  const [payoutInfo, timeline] = await Promise.all([
+  const [payoutInfo, timelineData] = await Promise.all([
     getUserPayoutInfo(user.id),
     getPayoutTimeline(user.id),
   ]);
+
+  const timeline = {
+    ...timelineData,
+    cycleName: timelineData.cycleName ?? "",
+    totalSlots: timelineData.totalSlots ?? 0,
+  };
 
   return (
     <UserPayoutsView

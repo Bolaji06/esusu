@@ -4,6 +4,7 @@
 
 import { motion } from "framer-motion";
 import { Download, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
+import type { ComponentType } from "react";
 
 interface Props {
   data: any;
@@ -18,8 +19,21 @@ export default function FinancialSummaryCard({ data, onExport }: Props) {
       minimumFractionDigits: 0,
     }).format(amount);
   };
+  interface SectionItem {
+    label: string;
+    value: any;
+    color: string;
+    icon?: ComponentType<any>;
+    count?: number;
+    highlight?: boolean;
+  }
 
-  const sections = [
+  interface Section {
+    title: string;
+    items: SectionItem[];
+  }
+
+  const sections: Section[] = [
     {
       title: "Collections",
       items: [
@@ -72,8 +86,7 @@ export default function FinancialSummaryCard({ data, onExport }: Props) {
         {
           label: "Net Balance",
           value: data.netBalance,
-          color:
-            data.netBalance >= 0 ? "text-green-600" : "text-red-600",
+          color: data.netBalance >= 0 ? "text-green-600" : "text-red-600",
           highlight: true,
         },
         {
@@ -130,9 +143,7 @@ export default function FinancialSummaryCard({ data, onExport }: Props) {
                       </div>
                     )}
                     <p className="text-sm text-gray-600 mb-1">{item.label}</p>
-                    <p
-                      className={`text-2xl font-bold ${item.color}`}
-                    >
+                    <p className={`text-2xl font-bold ${item.color}`}>
                       {formatCurrency(item.value)}
                     </p>
                     {item.count !== undefined && (
