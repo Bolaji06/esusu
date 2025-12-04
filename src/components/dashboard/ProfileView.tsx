@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -124,7 +123,9 @@ export default function ProfileView({ profileData }: Props) {
               <User className="w-10 h-10" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold">{profileData.user.fullName}</h2>
+              <h2 className="text-2xl font-bold">
+                {profileData.user.fullName}
+              </h2>
               <p className="text-indigo-100 mt-1">{profileData.user.phone}</p>
               <div className="mt-2 flex items-center gap-3">
                 <span
@@ -141,6 +142,34 @@ export default function ProfileView({ profileData }: Props) {
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl mt-4"
+      >
+        <div className="flex gap-3 md:gap-0 flex-col md:flex-row justify-between">
+          <div>
+            <h2 className="text-base">
+              Account Number:{" "}
+              <span className="font-mono font-bold tracking-wide">177379076</span>
+            </h2>
+          </div>
+          <div>
+            <h2 className="text-base">
+              Account Name:{" "}
+              <span className="font-bold">M&Z General Business</span>
+            </h2>
+          </div>
+          <div>
+            <h2 className="text-base">
+              Bank Name:{" "}
+              <span className="font-bold">Access Bank</span>
+            </h2>
           </div>
         </div>
       </motion.div>
@@ -238,9 +267,7 @@ export default function ProfileView({ profileData }: Props) {
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-800">Phone Number</h3>
-              <p className="text-sm text-gray-600">
-                Your login phone number
-              </p>
+              <p className="text-sm text-gray-600">Your login phone number</p>
             </div>
           </div>
           <button
@@ -310,9 +337,7 @@ export default function ProfileView({ profileData }: Props) {
         ) : (
           <div className="p-6">
             <p className="text-gray-600">••••••••</p>
-            <p className="text-sm text-gray-500 mt-1">
-              Last changed: Unknown
-            </p>
+            <p className="text-sm text-gray-500 mt-1">Last changed: Unknown</p>
           </div>
         )}
       </motion.div>
@@ -331,7 +356,9 @@ export default function ProfileView({ profileData }: Props) {
                 <Building className="w-5 h-5 text-purple-600" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-800">Bank Details</h3>
+                <h3 className="text-lg font-bold text-gray-800">
+                  Bank Details
+                </h3>
                 <p className="text-sm text-gray-600">
                   For payout in {profileData.activeParticipation.cycleName}
                 </p>
@@ -372,7 +399,10 @@ export default function ProfileView({ profileData }: Props) {
                     <div>
                       <p className="text-sm text-gray-600">Account Number</p>
                       <p className="font-semibold text-gray-800 font-mono">
-                        {profileData.activeParticipation.bankDetails.accountNumber}
+                        {
+                          profileData.activeParticipation.bankDetails
+                            .accountNumber
+                        }
                       </p>
                     </div>
                   </div>
@@ -381,7 +411,10 @@ export default function ProfileView({ profileData }: Props) {
                     <div>
                       <p className="text-sm text-gray-600">Account Name</p>
                       <p className="font-semibold text-gray-800">
-                        {profileData.activeParticipation.bankDetails.accountName}
+                        {
+                          profileData.activeParticipation.bankDetails
+                            .accountName
+                        }
                       </p>
                     </div>
                   </div>
