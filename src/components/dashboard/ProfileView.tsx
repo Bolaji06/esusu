@@ -156,7 +156,7 @@ export default function ProfileView({ profileData }: Props) {
           <div>
             <h2 className="text-base">
               Account Number:{" "}
-              <span className="font-mono font-bold tracking-wide">177379076</span>
+              <span className="font-mono font-bold tracking-wide">1773790765</span>
             </h2>
           </div>
           <div>

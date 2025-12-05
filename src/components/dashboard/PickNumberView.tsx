@@ -100,7 +100,7 @@ export default function PickNumberView({
   }
 
   // Not registered for cycle
-  if (!hasParticipation) {
+  if (hasParticipation) {
     return (
       <div className="max-w-4xl mx-auto">
         <motion.div
