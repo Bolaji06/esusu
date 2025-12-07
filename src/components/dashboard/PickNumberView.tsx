@@ -1,9 +1,8 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Calendar, AlertCircle, CheckCircle, Users, ArrowRight } from "lucide-react";
+import { Calendar, AlertCircle, CheckCircle, Users, ArrowRight, Home } from "lucide-react";
 import NumberCard from "../NumberCard";
 import { pickNumber, checkUserParticipation } from "@/src/actions/numberPicks";
 import { toast } from "sonner";
@@ -16,6 +15,7 @@ interface Props {
     id: string;
     name: string;
     totalSlots: number;
+    displaySlots: number;
     status: string;
     canPickNumbers: boolean;
     numberPickingStartDate?: Date | null;
@@ -26,6 +26,9 @@ interface Props {
   } | null;
   takenNumbers: number[];
 }
+
+// House reserved numbers
+const HOUSE_RESERVED_NUMBERS = [1, 2];
 
 export default function PickNumberView({
   userId,
@@ -40,8 +43,9 @@ export default function PickNumberView({
   const [hasParticipation, setHasParticipation] = useState(false);
   const [isCheckingParticipation, setIsCheckingParticipation] = useState(true);
 
+  // Use displaySlots (totalSlots + reserved) to generate numbers
   const [numbers] = useState(() =>
-    Array.from({ length: cycleData.totalSlots }, (_, i) => i + 1).sort(
+    Array.from({ length: cycleData.displaySlots }, (_, i) => i + 1).sort(
       () => Math.random() - 0.5
     )
   );
@@ -57,6 +61,14 @@ export default function PickNumberView({
 
   const handleSelect = async (num: number) => {
     if (selected || isPicking) return;
+
+    // Check if number is house reserved
+    if (HOUSE_RESERVED_NUMBERS.includes(num)) {
+      toast.error(`Number ${num} is reserved for house payouts`, {
+        description: "Please select a different number",
+      });
+      return;
+    }
 
     setIsPicking(true);
 
@@ -88,6 +100,12 @@ export default function PickNumberView({
     });
   };
 
+  // Calculate available numbers (displaySlots - taken - reserved)
+  const userTakenNumbers = takenNumbers.filter(
+    (n) => !HOUSE_RESERVED_NUMBERS.includes(n)
+  );
+  const availableNumbers = cycleData.displaySlots - userTakenNumbers.length - HOUSE_RESERVED_NUMBERS.length;
+
   // Loading state
   if (isCheckingParticipation) {
     return (
@@ -100,7 +118,7 @@ export default function PickNumberView({
   }
 
   // Not registered for cycle
-  if (hasParticipation) {
+  if (!hasParticipation) {
     return (
       <div className="max-w-4xl mx-auto">
         <motion.div
@@ -237,7 +255,7 @@ export default function PickNumberView({
       )}
 
       {/* Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -247,8 +265,21 @@ export default function PickNumberView({
           <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
             <Calendar className="w-6 h-6 text-indigo-600" />
           </div>
-          <p className="text-sm text-gray-600 mb-1">Total Numbers</p>
+          <p className="text-sm text-gray-600 mb-1">User Slots</p>
           <p className="text-3xl font-bold text-gray-800">{cycleData.totalSlots}</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
+        >
+          <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
+            <Home className="w-6 h-6 text-amber-600" />
+          </div>
+          <p className="text-sm text-gray-600 mb-1">House Reserved</p>
+          <p className="text-3xl font-bold text-gray-800">{HOUSE_RESERVED_NUMBERS.length}</p>
         </motion.div>
 
         <motion.div
@@ -260,23 +291,21 @@ export default function PickNumberView({
           <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
             <CheckCircle className="w-6 h-6 text-green-600" />
           </div>
-          <p className="text-sm text-gray-600 mb-1">Already Picked</p>
-          <p className="text-3xl font-bold text-gray-800">{takenNumbers.length}</p>
+          <p className="text-sm text-gray-600 mb-1">User Picked</p>
+          <p className="text-3xl font-bold text-gray-800">{userTakenNumbers.length}</p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.25 }}
           className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
         >
           <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
             <Users className="w-6 h-6 text-orange-600" />
           </div>
           <p className="text-sm text-gray-600 mb-1">Available</p>
-          <p className="text-3xl font-bold text-gray-800">
-            {cycleData.totalSlots - takenNumbers.length}
-          </p>
+          <p className="text-3xl font-bold text-gray-800">{availableNumbers}</p>
         </motion.div>
       </div>
 
@@ -285,7 +314,7 @@ export default function PickNumberView({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.3 }}
           className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6"
         >
           <div className="flex items-start gap-3">
@@ -294,7 +323,10 @@ export default function PickNumberView({
               <h3 className="font-bold text-indigo-900 mb-2">Important Information</h3>
               <ul className="space-y-2 text-sm text-indigo-800">
                 <li>• Your picked number determines when you receive your payout</li>
-                <li>• Number 1 = First month payout, Number 10 = Tenth month payout</li>
+                <li>
+                  • <strong>Numbers 1 & 2 are reserved for house payouts</strong> and cannot be selected
+                </li>
+                <li>• Number 3 = Month 3 payout, Number {cycleData.displaySlots} = Month {cycleData.displaySlots} payout</li>
                 <li>• Once picked, numbers cannot be changed</li>
                 <li>• You can only pick one number per cycle</li>
               </ul>
@@ -306,30 +338,37 @@ export default function PickNumberView({
       {/* Number Grid */}
       <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100">
         <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 sm:gap-5 md:gap-6 justify-items-center">
-          {numbers.map((num, index) => (
-            <motion.div
-              key={num}
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{
-                duration: 0.4,
-                delay: index * 0.03,
-                ease: "easeOut",
-              }}
-            >
-              <NumberCard
-                number={num}
-                isRevealed={revealed.includes(num)}
-                isDisabled={
-                  (selected !== null && selected !== num) ||
-                  takenNumbers.includes(num) ||
-                  isPicking
-                }
-                isTaken={takenNumbers.includes(num) && !revealed.includes(num)}
-                onSelect={() => handleSelect(num)}
-              />
-            </motion.div>
-          ))}
+          {numbers.map((num, index) => {
+            const isHouseReserved = HOUSE_RESERVED_NUMBERS.includes(num);
+            const isUserTaken = takenNumbers.includes(num) && !isHouseReserved;
+            
+            return (
+              <motion.div
+                key={num}
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{
+                  duration: 0.4,
+                  delay: index * 0.03,
+                  ease: "easeOut",
+                }}
+              >
+                <NumberCard
+                  number={num}
+                  isRevealed={revealed.includes(num)}
+                  isDisabled={
+                    (selected !== null && selected !== num) ||
+                    isHouseReserved ||
+                    isUserTaken ||
+                    isPicking
+                  }
+                  isTaken={isHouseReserved || isUserTaken}
+                  isHouseReserved={isHouseReserved}
+                  onSelect={() => handleSelect(num)}
+                />
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 

@@ -7,30 +7,11 @@ import { uploadProofToSupabase } from "./uploadToSupabase";
 
 export async function getUserPayments(userId: string) {
   try {
-    // Get active participation
-    const cycle = await prisma.contributionCycle.findFirst({
-      where: { status: "ACTIVE" },
-    });
-
-    if (!cycle) {
-      return {
-        participation: null,
-        payments: [],
-        stats: {
-          totalPaid: 0,
-          totalFines: 0,
-          pendingCount: 0,
-          overdueCount: 0,
-        },
-      };
-    }
-
-    const participation = await prisma.participation.findUnique({
+    // Get the cycle the user is participating in (NOT just first active cycle)
+    const participation = await prisma.participation.findFirst({
       where: {
-        userId_cycleId: {
-          userId,
-          cycleId: cycle.id,
-        },
+        userId,
+        cycle: { status: "ACTIVE" },
       },
       include: {
         cycle: true,
@@ -190,7 +171,6 @@ export async function uploadPaymentProof(
   prevState: unknown,
   formData: FormData
 ) {
-  console.log(process.env.NEXT_PUBLIC_SUPABASE_URL);
   const paymentId = formData.get("paymentId") as string;
   const file = formData.get("proof") as File;
 
@@ -224,16 +204,37 @@ export async function uploadPaymentProof(
   }
 
   try {
-    // === Upload via extracted helper ===
+    // Get the payment first to check if it's overdue
+    const payment = await prisma.payment.findUnique({
+      where: { id: paymentId },
+      include: { participation: true },
+    });
+
+    if (!payment) {
+      return {
+        success: false,
+        error: "Payment not found",
+      };
+    }
+
+    // Check if overdue and calculate fine
+    const isOverdue = new Date() > payment.dueDate;
+    const hasFine = isOverdue && payment.status !== "PAID";
+    const fineAmount = hasFine ? payment.participation.fineAmount : 0;
+
+    // Upload file
     const uploadUrl = await uploadProofToSupabase(file, paymentId);
 
-    // === Update DB ===
+    // Update payment with proof and fine info
     await prisma.payment.update({
       where: { id: paymentId },
       data: {
         proofOfPayment: uploadUrl,
         status: "PAID",
         paidAt: new Date(),
+        paidAmount: payment.amount + fineAmount,
+        hasFine,
+        fineAmount,
       },
     });
 
@@ -241,8 +242,12 @@ export async function uploadPaymentProof(
 
     return {
       success: true,
-      message: "Payment proof uploaded successfully",
+      message: hasFine 
+        ? `Payment proof uploaded. Note: ₦${fineAmount.toLocaleString()} fine applied for late payment`
+        : "Payment proof uploaded successfully",
       url: uploadUrl,
+      hasFine,
+      fineAmount,
     };
   } catch (error: any) {
     console.error("Upload payment proof error:", error);
@@ -301,7 +306,9 @@ export async function markPaymentAsPaid(paymentId: string, userId: string) {
 
     return {
       success: true,
-      message: "Payment marked as paid",
+      message: hasFine
+        ? `Payment marked as paid with ₦${fineAmount.toLocaleString()} fine`
+        : "Payment marked as paid",
       hasFine,
       fineAmount,
     };

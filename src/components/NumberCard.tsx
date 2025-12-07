@@ -2,14 +2,15 @@
 
 import { motion } from "framer-motion";
 import clsx from "clsx";
-import { useState, useEffect, useEffectEvent } from "react";
-import { Lock, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Lock, Sparkles, Home } from "lucide-react";
 
 interface Props {
   number: number;
   isRevealed: boolean;
   isDisabled: boolean;
   isTaken?: boolean;
+  isHouseReserved?: boolean;
   onSelect: () => void;
 }
 
@@ -23,17 +24,18 @@ export default function NumberCard({
   isRevealed,
   isDisabled,
   isTaken = false,
+  isHouseReserved = false,
   onSelect,
 }: Props) {
   const [flipped, setFlipped] = useState(isRevealed);
   const [isHovered, setIsHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  const mountComponent = useEffectEvent(() => setIsMounted(true));
-
   // Fix hydration by only enabling animations after mount
   useEffect(() => {
-    mountComponent();
+    // Defer state update to the next animation frame to avoid synchronous setState inside the effect
+    const raf = requestAnimationFrame(() => setIsMounted(true));
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   const handleClick = () => {
@@ -47,8 +49,9 @@ export default function NumberCard({
   };
 
   // Determine card state
-  const showTakenState = isTaken;
-  const showAvailableState = !isTaken;
+  const showHouseReservedState = isHouseReserved;
+  const showTakenState = isTaken && !isHouseReserved;
+  const showAvailableState = !isTaken && !isHouseReserved;
 
   return (
     <motion.div
@@ -89,7 +92,9 @@ export default function NumberCard({
         <div
           className={clsx(
             "absolute inset-0 flex flex-col items-center justify-center rounded-3xl backface-hidden border-2 overflow-hidden",
-            isDisabled || showTakenState
+            showHouseReservedState
+              ? "bg-gradient-to-br from-amber-400 to-yellow-500 border-amber-500 cursor-not-allowed"
+              : isDisabled || showTakenState
               ? "bg-gradient-to-br from-gray-300 to-gray-400 border-gray-400 cursor-not-allowed"
               : "bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 border-purple-400"
           )}
@@ -134,6 +139,15 @@ export default function NumberCard({
 
           {/* Content - render consistently */}
           <div className="relative z-10 flex flex-col items-center justify-center gap-2">
+            {showHouseReservedState && (
+              <>
+                <Home className="w-8 h-8 text-amber-900" />
+                <span className="text-xs font-semibold text-amber-900 uppercase tracking-wider">
+                  House
+                </span>
+              </>
+            )}
+
             {showTakenState && (
               <>
                 <Lock className="w-8 h-8 text-gray-600" />

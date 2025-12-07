@@ -16,7 +16,7 @@ export default async function PickNumberPage() {
 
   const cycleData = await getActiveCycle();
   const userPick = await getUserPick(user.id);
-  const takenNumbers = await getAllPicks();
+  const takenNumbers = await getAllPicks(user.id);
 
   return (
     <PickNumberView

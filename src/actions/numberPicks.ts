@@ -1,17 +1,37 @@
-
 "use server";
 
 import prisma from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function getActiveCycle() {
+// Constants for restricted numbers
+const HOUSE_RESERVED_NUMBERS = [1, 2];
+
+export async function getActiveCycle(userId?: string) {
   try {
-    const cycle = await prisma.contributionCycle.findFirst({
-      where: {
-        status: "ACTIVE",
-      },
-      orderBy: { createdAt: "desc" },
-    });
+    let cycle;
+
+    if (userId) {
+      // Get the cycle the user is participating in
+      const participation = await prisma.participation.findFirst({
+        where: {
+          userId,
+          cycle: { status: "ACTIVE" },
+        },
+        include: {
+          cycle: true,
+        },
+      });
+
+      cycle = participation?.cycle;
+    } else {
+      // Fallback to any active cycle
+      cycle = await prisma.contributionCycle.findFirst({
+        where: {
+          status: "ACTIVE",
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    }
 
     if (!cycle) {
       return {
@@ -21,6 +41,7 @@ export async function getActiveCycle() {
         status: "UPCOMING",
         canPickNumbers: false,
         hasActiveParticipation: false,
+        displaySlots: 20,
       };
     }
 
@@ -28,14 +49,18 @@ export async function getActiveCycle() {
       ? new Date() >= cycle.numberPickingStartDate
       : cycle.status === "ACTIVE";
 
+    // Add reserved numbers to the total for display
+    const displaySlots = cycle.totalSlots + HOUSE_RESERVED_NUMBERS.length;
+
     return {
       id: cycle.id,
       name: cycle.name,
       totalSlots: cycle.totalSlots,
+      displaySlots, // Total numbers to display (including reserved)
       status: cycle.status,
       canPickNumbers,
       numberPickingStartDate: cycle.numberPickingStartDate,
-      hasActiveParticipation: false, // Will be set in the component
+      hasActiveParticipation: userId ? true : false,
     };
   } catch (error) {
     console.error("Error getting active cycle:", error);
@@ -46,46 +71,51 @@ export async function getActiveCycle() {
       status: "UPCOMING",
       canPickNumbers: false,
       hasActiveParticipation: false,
+      displaySlots: 20,
     };
   }
 }
 
 export async function pickNumber(userId: string, number: number) {
   try {
-    // Get active cycle
-    const cycle = await prisma.contributionCycle.findFirst({
-      where: { status: "ACTIVE" },
-    });
-
-    if (!cycle) {
+    // Validate that number is not reserved for house
+    if (HOUSE_RESERVED_NUMBERS.includes(number)) {
       return {
         success: false,
-        error: "No active cycle found",
+        error: `Number ${number} is reserved for house payouts and cannot be selected`,
       };
     }
 
-    // Check if number picking has started
-    if (cycle.numberPickingStartDate && new Date() < cycle.numberPickingStartDate) {
-      return {
-        success: false,
-        error: `Number picking starts on ${cycle.numberPickingStartDate.toLocaleDateString()}`,
-      };
-    }
-
-    // Check if user is registered for this cycle
-    const participation = await prisma.participation.findUnique({
+    // Get the cycle the user is participating in
+    const participation = await prisma.participation.findFirst({
       where: {
-        userId_cycleId: {
-          userId,
-          cycleId: cycle.id,
-        },
+        userId,
+        cycle: { status: "ACTIVE" },
+      },
+      include: {
+        cycle: true,
+        payout: true,
       },
     });
 
     if (!participation) {
       return {
         success: false,
-        error: "You must join this cycle before picking a number",
+        error: "You are not registered for any active cycle",
+      };
+    }
+
+    const cycle = participation.cycle;
+    console.log("User's active cycle:", cycle);
+
+    // Check if number picking has started
+    if (
+      cycle.numberPickingStartDate &&
+      new Date() < cycle.numberPickingStartDate
+    ) {
+      return {
+        success: false,
+        error: `Number picking starts on ${cycle.numberPickingStartDate.toLocaleDateString()}`,
       };
     }
 
@@ -98,11 +128,14 @@ export async function pickNumber(userId: string, number: number) {
       };
     }
 
-    // Check if number is already taken
+    // Check if number is already taken in this cycle
     const numberTaken = await prisma.participation.findFirst({
       where: {
         cycleId: cycle.id,
         pickedNumber: number,
+        NOT: {
+          userId: userId,
+        },
       },
     });
 
@@ -113,35 +146,56 @@ export async function pickNumber(userId: string, number: number) {
       };
     }
 
-    // Validate number is within range
-    if (number < 1 || number > cycle.totalSlots) {
+    // Validate number is within range (including reserved numbers)
+    const maxNumber = cycle.totalSlots + HOUSE_RESERVED_NUMBERS.length;
+    if (number < 1 || number > maxNumber) {
       return {
         success: false,
-        error: `Number must be between 1 and ${cycle.totalSlots}`,
+        error: `Number must be between 1 and ${maxNumber}`,
       };
     }
-
-    // Pick the number
-    const updated = await prisma.participation.update({
-      where: { id: participation.id },
-      data: { pickedNumber: number },
-    });
 
     // Calculate payout date (cycle start + picked number months - 1)
     const payoutDate = new Date(cycle.startDate);
     payoutDate.setMonth(payoutDate.getMonth() + number - 1);
     payoutDate.setDate(cycle.paymentDeadlineDay);
 
-    // Create payout schedule
-    await prisma.payout.create({
-      data: {
-        participationId: participation.id,
-        userId,
-        cycleId: cycle.id,
-        amount: participation.totalPayout,
-        scheduledMonth: number,
-        scheduledDate: payoutDate,
-      },
+    // Use a transaction to update both participation and payout
+    const result = await prisma.$transaction(async (tx) => {
+      // Update participation with picked number
+      const updated = await tx.participation.update({
+        where: { id: participation.id },
+        data: { pickedNumber: number },
+      });
+
+      // Check if payout already exists
+      let payout = participation.payout;
+
+      if (payout) {
+        // Update existing payout
+        payout = await tx.payout.update({
+          where: { id: payout.id },
+          data: {
+            scheduledMonth: number,
+            scheduledDate: payoutDate,
+            amount: participation.totalPayout,
+          },
+        });
+      } else {
+        // Create new payout
+        payout = await tx.payout.create({
+          data: {
+            participationId: participation.id,
+            userId,
+            cycleId: cycle.id,
+            amount: participation.totalPayout,
+            scheduledMonth: number,
+            scheduledDate: payoutDate,
+          },
+        });
+      }
+
+      return { updated, payout };
     });
 
     revalidatePath("/dashboard");
@@ -150,8 +204,8 @@ export async function pickNumber(userId: string, number: number) {
     return {
       success: true,
       pick: {
-        id: updated.id,
-        number: updated.pickedNumber,
+        id: result.updated.id,
+        number: result.updated.pickedNumber,
       },
     };
   } catch (error) {
@@ -165,21 +219,15 @@ export async function pickNumber(userId: string, number: number) {
 
 export async function getUserPick(userId: string) {
   try {
-    const cycle = await prisma.contributionCycle.findFirst({
-      where: { status: "ACTIVE" },
-    });
-
-    if (!cycle) return null;
-
-    const participation = await prisma.participation.findUnique({
+    // Get the user's participation in an active cycle
+    const participation = await prisma.participation.findFirst({
       where: {
-        userId_cycleId: {
-          userId,
-          cycleId: cycle.id,
-        },
+        userId,
+        cycle: { status: "ACTIVE" },
       },
       include: {
         payout: true,
+        cycle: true,
       },
     });
 
@@ -195,17 +243,25 @@ export async function getUserPick(userId: string) {
   }
 }
 
-export async function getAllPicks() {
+export async function getAllPicks(userId: string) {
   try {
-    const cycle = await prisma.contributionCycle.findFirst({
-      where: { status: "ACTIVE" },
+    // Get the cycle the user is participating in
+    const participation = await prisma.participation.findFirst({
+      where: {
+        userId,
+        cycle: { status: "ACTIVE" },
+      },
+      include: {
+        cycle: true,
+      },
     });
 
-    if (!cycle) return [];
+    if (!participation) return [];
 
+    // Get all picks from this specific cycle
     const picks = await prisma.participation.findMany({
       where: {
-        cycleId: cycle.id,
+        cycleId: participation.cycleId,
         pickedNumber: { not: null },
       },
       select: {
@@ -213,9 +269,12 @@ export async function getAllPicks() {
       },
     });
 
-    return picks
+    // Add house reserved numbers to the taken list
+    const userPicks = picks
       .map((p) => p.pickedNumber)
       .filter((n): n is number => n !== null);
+
+    return [...HOUSE_RESERVED_NUMBERS, ...userPicks];
   } catch (error) {
     console.error("Error getting all picks:", error);
     return [];
@@ -224,18 +283,11 @@ export async function getAllPicks() {
 
 export async function checkUserParticipation(userId: string) {
   try {
-    const cycle = await prisma.contributionCycle.findFirst({
-      where: { status: "ACTIVE" },
-    });
-
-    if (!cycle) return false;
-
-    const participation = await prisma.participation.findUnique({
+    // Check if user has an active participation
+    const participation = await prisma.participation.findFirst({
       where: {
-        userId_cycleId: {
-          userId,
-          cycleId: cycle.id,
-        },
+        userId,
+        cycle: { status: "ACTIVE" },
       },
     });
 
