@@ -323,10 +323,10 @@ export default function PickNumberView({
               <h3 className="font-bold text-indigo-900 mb-2">Important Information</h3>
               <ul className="space-y-2 text-sm text-indigo-800">
                 <li>• Your picked number determines when you receive your payout</li>
-                <li>
+                {/* <li>
                   • <strong>Numbers 1 & 2 are reserved for house payouts</strong> and cannot be selected
                 </li>
-                <li>• Number 3 = Month 3 payout, Number {cycleData.displaySlots} = Month {cycleData.displaySlots} payout</li>
+                <li>• Number 3 = Month 3 payout, Number {cycleData.displaySlots} = Month {cycleData.displaySlots} payout</li> */}
                 <li>• Once picked, numbers cannot be changed</li>
                 <li>• You can only pick one number per cycle</li>
               </ul>
