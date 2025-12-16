@@ -7,6 +7,7 @@ import { updateCycle } from "@/src/actions/cycles";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
+import { CycleStatus } from "@/app/generated/prisma/enums";
 
 interface Cycle {
   id: string;
@@ -60,7 +61,7 @@ export default function EditCycleView({ cycle, adminId }: Props) {
       numberPickingStartDate: formData.get("numberPickingStartDate") as
         | string
         | null,
-      status: formData.get("status") as string,
+      status: formData.get("status") as CycleStatus,
       totalSlots: parseInt(formData.get("totalSlots") as string, 10),
       paymentDeadlineDay: parseInt(
         formData.get("paymentDeadlineDay") as string,
