@@ -50,7 +50,7 @@ export async function getActiveCycle(userId?: string) {
       : cycle.status === "ACTIVE";
 
     // Add reserved numbers to the total for display
-    const displaySlots = cycle.totalSlots + HOUSE_RESERVED_NUMBERS.length;
+    const displaySlots = cycle.totalSlots;
 
     return {
       id: cycle.id,
@@ -147,7 +147,7 @@ export async function pickNumber(userId: string, number: number) {
     }
 
     // Validate number is within range (including reserved numbers)
-    const maxNumber = cycle.totalSlots + HOUSE_RESERVED_NUMBERS.length;
+    const maxNumber = cycle.totalSlots;
     if (number < 1 || number > maxNumber) {
       return {
         success: false,

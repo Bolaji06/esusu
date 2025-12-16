@@ -1,9 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import prisma from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 import { uploadProofToSupabase } from "./uploadToSupabase";
+
+export interface ActionState {
+  success: boolean;
+  message?: string;
+  error?: string;
+  [key: string]: unknown;
+}
 
 export async function getUserPayments(userId: string) {
   try {
@@ -99,7 +105,7 @@ export async function getUserPayments(userId: string) {
   }
 }
 
-export async function recordPayment(prevState: unknown, formData: FormData) {
+export async function recordPayment(prevState: ActionState | null, formData: FormData): Promise<ActionState> {
   const paymentId = formData.get("paymentId") as string;
   const amount = parseFloat(formData.get("amount") as string);
   const proofUrl = formData.get("proofUrl") as string;
@@ -168,9 +174,9 @@ export async function recordPayment(prevState: unknown, formData: FormData) {
 }
 
 export async function uploadPaymentProof(
-  prevState: unknown,
+  prevState: ActionState | null,
   formData: FormData
-) {
+): Promise<ActionState> {
   const paymentId = formData.get("paymentId") as string;
   const file = formData.get("proof") as File;
 
@@ -242,18 +248,18 @@ export async function uploadPaymentProof(
 
     return {
       success: true,
-      message: hasFine 
+      message: hasFine
         ? `Payment proof uploaded. Note: ₦${fineAmount.toLocaleString()} fine applied for late payment`
         : "Payment proof uploaded successfully",
       url: uploadUrl,
       hasFine,
       fineAmount,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Upload payment proof error:", error);
     return {
       success: false,
-      error: error.message || "Failed to upload payment proof",
+      error: (error as Error).message || "Failed to upload payment proof",
     };
   }
 }

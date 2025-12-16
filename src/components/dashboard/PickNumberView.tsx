@@ -339,9 +339,11 @@ export default function PickNumberView({
       <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100">
         <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 sm:gap-5 md:gap-6 justify-items-center">
           {numbers.map((num, index) => {
-            const isHouseReserved = HOUSE_RESERVED_NUMBERS.includes(num);
-            const isUserTaken = takenNumbers.includes(num) && !isHouseReserved;
-            
+            // Treat house reserved numbers as just "taken" for visual consistency
+            // const isHouseReserved = HOUSE_RESERVED_NUMBERS.includes(num);
+            const isHouseReserved = false;
+            const isUserTaken = takenNumbers.includes(num);
+
             return (
               <motion.div
                 key={num}

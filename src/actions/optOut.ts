@@ -1,9 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 "use server";
 
 import prisma from "../lib/prisma";
 import { revalidatePath } from "next/cache";
+
+export interface ActionState {
+  success: boolean;
+  message?: string;
+  error?: string;
+  [key: string]: unknown;
+}
 
 // Get opt-out eligibility and calculations
 export async function getOptOutInfo(userId: string) {
@@ -130,9 +135,9 @@ export async function getOptOutInfo(userId: string) {
 
 // Submit opt-out request
 export async function submitOptOutRequest(
-  prevState: any,
+  prevState: ActionState | null,
   formData: FormData
-) {
+): Promise<ActionState> {
   const userId = formData.get("userId") as string;
   const cycleId = formData.get("cycleId") as string;
   const reason = formData.get("reason") as string;

@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 "use server";
 
+import { Prisma } from "@/app/generated/prisma/client";
 import prisma from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -10,7 +9,7 @@ export async function getAllPayouts(
   filter: "all" | "pending" | "completed" = "all"
 ) {
   try {
-    const where: any = {};
+    const where: Prisma.PayoutWhereInput = {};
 
     if (filter === "pending") {
       where.status = "PENDING";
@@ -61,10 +60,10 @@ export async function getAllPayouts(
       notes: p.notes,
       bankDetails: p.participation.bankDetails
         ? {
-            bankName: p.participation.bankDetails.bankName,
-            accountNumber: p.participation.bankDetails.accountNumber,
-            accountName: p.participation.bankDetails.accountName,
-          }
+          bankName: p.participation.bankDetails.bankName,
+          accountNumber: p.participation.bankDetails.accountNumber,
+          accountName: p.participation.bankDetails.accountName,
+        }
         : null,
     }));
   } catch (error) {
@@ -293,9 +292,8 @@ export async function batchProcessPayouts(
 
     return {
       success: true,
-      message: `Processed ${successful} payout(s)${
-        failed > 0 ? `, ${failed} failed` : ""
-      }`,
+      message: `Processed ${successful} payout(s)${failed > 0 ? `, ${failed} failed` : ""
+        }`,
       successful,
       failed,
     };

@@ -1,9 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import prisma from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 import { CycleStatus } from "@/app/generated/prisma/enums";
+
+export interface ActionState {
+  success: boolean;
+  message?: string;
+  error?: string;
+  [key: string]: unknown;
+}
+
+export interface CycleUpdateData {
+  name?: string;
+  startDate?: string | Date;
+  endDate?: string | Date;
+  registrationDeadline?: string | Date;
+  numberPickingStartDate?: string | Date | null;
+  status?: CycleStatus;
+  totalSlots?: number;
+  paymentDeadlineDay?: number;
+}
 
 // Verify admin access
 async function verifyAdmin(userId: string) {
@@ -125,7 +142,7 @@ export async function getCycleDetails(cycleId: string) {
 }
 
 // Create new cycle
-export async function createCycle(prevState: any, formData: FormData) {
+export async function createCycle(prevState: ActionState | null, formData: FormData): Promise<ActionState> {
   const adminId = formData.get("adminId") as string;
 
   // Verify admin
@@ -200,7 +217,7 @@ export async function createCycle(prevState: any, formData: FormData) {
 }
 
 // Update cycle
-export async function updateCycle(cycleId: string, adminId: string, data: any) {
+export async function updateCycle(cycleId: string, adminId: string, data: CycleUpdateData): Promise<ActionState> {
   try {
     // Verify admin
     const isAdmin = await verifyAdmin(adminId);
@@ -280,7 +297,7 @@ export async function updateCycle(cycleId: string, adminId: string, data: any) {
 }
 
 // Generate monthly payments for a cycle
-export async function generateCyclePayments(cycleId: string, adminId: string) {
+export async function generateCyclePayments(cycleId: string, adminId: string): Promise<ActionState> {
   try {
     // Verify admin
     const isAdmin = await verifyAdmin(adminId);
@@ -363,7 +380,7 @@ export async function generateCyclePayments(cycleId: string, adminId: string) {
 }
 
 // Close cycle
-export async function closeCycle(cycleId: string, adminId: string) {
+export async function closeCycle(cycleId: string, adminId: string): Promise<ActionState> {
   try {
     // Verify admin
     const isAdmin = await verifyAdmin(adminId);
@@ -414,7 +431,7 @@ export async function closeCycle(cycleId: string, adminId: string) {
 }
 
 // Delete cycle (only if no participants)
-export async function deleteCycle(cycleId: string, adminId: string) {
+export async function deleteCycle(cycleId: string, adminId: string): Promise<ActionState> {
   try {
     // Verify admin
     const isAdmin = await verifyAdmin(adminId);
