@@ -28,6 +28,9 @@ export async function getAllUsersWithDetails(
 
     if (statusFilter && statusFilter !== "all") {
       where.status = statusFilter.toUpperCase();
+    } else if (statusFilter === "all" || !statusFilter) {
+      // By default, exclude deleted users from general view
+      where.status = { not: "DELETED" };
     }
 
     const [users, total] = await Promise.all([
@@ -577,7 +580,7 @@ export async function deleteUser(
     await prisma.user.update({
       where: { id: userId },
       data: {
-        status: "SUSPENDED",
+        status: "DELETED",
       },
     });
 
@@ -589,7 +592,7 @@ export async function deleteUser(
 
     return {
       success: true,
-      message: "User account deactivated successfully",
+      message: "User account deleted successfully",
     };
   } catch (error) {
     console.error("Error deleting user:", error);

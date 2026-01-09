@@ -50,14 +50,14 @@ export default function UserRow({ user, adminId, index }: Props) {
       SUSPENDED: "bg-red-100 text-red-700",
       OPTED_OUT: "bg-gray-100 text-gray-700",
       COMPLETED: "bg-blue-100 text-blue-700",
+      DELETED: "bg-gray-200 text-gray-500",
     };
 
     return (
       <span
-        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-          statusConfig[user.status as keyof typeof statusConfig] ||
+        className={`px-3 py-1 rounded-full text-xs font-semibold ${statusConfig[user.status as keyof typeof statusConfig] ||
           statusConfig.ACTIVE
-        }`}
+          }`}
       >
         {user.status}
       </span>

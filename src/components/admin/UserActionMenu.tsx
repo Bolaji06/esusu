@@ -289,7 +289,7 @@ export default function UserActionMenu({ user, adminId, onClose }: Props) {
                     onChange={(e) => setReason(e.target.value)}
                     placeholder="Provide a reason for this action..."
                     rows={3}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-400 focus:border-transparent outline-none transition-all resize-none"
+                    className="w-full px-4 py-3 text-black rounded-xl border border-gray-300 focus:ring-2 focus:ring-red-400 focus:border-transparent outline-none transition-all resize-none"
                   />
                 </div>
               )}
@@ -298,7 +298,7 @@ export default function UserActionMenu({ user, adminId, onClose }: Props) {
                 <button
                   onClick={() => setShowConfirmModal(false)}
                   disabled={isProcessing}
-                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  className="flex-1 cursor-pointer px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -310,7 +310,7 @@ export default function UserActionMenu({ user, adminId, onClose }: Props) {
                       confirmAction === "delete") &&
                       !reason.trim())
                   }
-                  className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 cursor-pointer px-4 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isProcessing ? (
                     <span className="flex items-center justify-center gap-2">

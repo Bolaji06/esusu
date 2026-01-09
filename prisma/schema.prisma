@@ -15,9 +15,9 @@ datasource db {
 }
 
 enum ContributionMode {
-  PACK_20K   // 20k monthly, gets 200k
-  PACK_50K   // 50k monthly, gets 500k
-  PACK_100K  // 100k monthly, gets 1M
+  PACK_20K // 20k monthly, gets 200k
+  PACK_50K // 50k monthly, gets 500k
+  PACK_100K // 100k monthly, gets 1M
 }
 
 enum PaymentStatus {
@@ -32,6 +32,7 @@ enum UserStatus {
   OPTED_OUT
   SUSPENDED
   COMPLETED
+  DELETED
 }
 
 enum CycleStatus {
@@ -48,201 +49,199 @@ enum OptOutStatus {
 }
 
 model User {
-  id              String            @id @default(uuid())
-  fullName        String
-  phone           String            @unique
-  email           String?
-  password        String
-  occupation      String?
-  address         String?
-  isAdmin         Boolean           @default(false)
-  status          UserStatus        @default(ACTIVE)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  
-  // Relations
-  participations  Participation[]
-  payments        Payment[]
-  payouts         Payout[]
-  optOutRequests  OptOutRequest[]
+  id         String     @id @default(uuid())
+  fullName   String
+  phone      String     @unique
+  email      String?
+  password   String
+  occupation String?
+  address    String?
+  isAdmin    Boolean    @default(false)
+  status     UserStatus @default(ACTIVE)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 
-  pick      NumberPick? // will be removed later
+  // Relations
+  participations Participation[]
+  payments       Payment[]
+  payouts        Payout[]
+  optOutRequests OptOutRequest[]
+
+  pick NumberPick? // will be removed later
 }
 
 model BankDetails {
   id              String        @id @default(uuid())
   participationId String        @unique
   participation   Participation @relation(fields: [participationId], references: [id], onDelete: Cascade)
-  
-  bankName        String
-  accountNumber   String
-  accountName     String
-  
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+
+  bankName      String
+  accountNumber String
+  accountName   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ContributionCycle {
-  id                      String         @id @default(uuid())
-  name                    String         // e.g., "January 2025 Cycle"
-  startDate               DateTime
-  endDate                 DateTime
-  registrationDeadline    DateTime
-  numberPickingStartDate  DateTime?      // When users can start picking numbers
-  status                  CycleStatus    @default(UPCOMING)
-  paymentDeadlineDay      Int            @default(29) // Day of month
-  totalSlots              Int            @default(20) // Total numbers available
-  
-  createdAt               DateTime       @default(now())
-  updatedAt               DateTime       @updatedAt
-  
+  id                     String      @id @default(uuid())
+  name                   String // e.g., "January 2025 Cycle"
+  startDate              DateTime
+  endDate                DateTime
+  registrationDeadline   DateTime
+  numberPickingStartDate DateTime? // When users can start picking numbers
+  status                 CycleStatus @default(UPCOMING)
+  paymentDeadlineDay     Int         @default(29) // Day of month
+  totalSlots             Int         @default(20) // Total numbers available
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relations
-  participations          Participation[]
-  payments                Payment[]
-  payouts                 Payout[]
+  participations Participation[]
+  payments       Payment[]
+  payouts        Payout[]
 }
 
 model Participation {
-  id              String            @id @default(uuid())
-  userId          String
-  user            User              @relation(fields: [userId], references: [id])
-  
-  cycleId         String
-  cycle           ContributionCycle @relation(fields: [cycleId], references: [id])
-  
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  cycleId String
+  cycle   ContributionCycle @relation(fields: [cycleId], references: [id])
+
   contributionMode ContributionMode
-  pickedNumber    Int?              // The number they picked for payout (replaces old NumberPick)
-  
+  pickedNumber     Int? // The number they picked for payout (replaces old NumberPick)
+
   // Financial details
-  monthlyAmount   Int               // 20000, 50000, or 100000
-  totalPayout     Int               // 200000, 500000, or 1000000
-  fineAmount      Int               // 2000, 2500, or 5000
-  
-  registeredAt    DateTime          @default(now())
-  hasOptedOut     Boolean           @default(false)
-  
+  monthlyAmount Int // 20000, 50000, or 100000
+  totalPayout   Int // 200000, 500000, or 1000000
+  fineAmount    Int // 2000, 2500, or 5000
+
+  registeredAt DateTime @default(now())
+  hasOptedOut  Boolean  @default(false)
+
   // Relations
-  bankDetails     BankDetails?
-  payments        Payment[]
-  payout          Payout?
-  
+  bankDetails BankDetails?
+  payments    Payment[]
+  payout      Payout?
+
   @@unique([userId, cycleId])
   @@unique([cycleId, pickedNumber]) // Ensure no duplicate numbers per cycle
   @@index([cycleId, pickedNumber])
 }
 
 model Payment {
-  id              String         @id @default(uuid())
+  id              String        @id @default(uuid())
   participationId String
-  participation   Participation  @relation(fields: [participationId], references: [id], onDelete: Cascade)
-  
-  userId          String
-  user            User           @relation(fields: [userId], references: [id])
-  
-  cycleId         String
-  cycle           ContributionCycle @relation(fields: [cycleId], references: [id])
-  
-  monthNumber     Int            // 1-20 (or however long the cycle is)
-  dueDate         DateTime
-  amount          Int
-  
-  paidAt          DateTime?
-  paidAmount      Int?
-  status          PaymentStatus  @default(PENDING)
-  
+  participation   Participation @relation(fields: [participationId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  cycleId String
+  cycle   ContributionCycle @relation(fields: [cycleId], references: [id])
+
+  monthNumber Int // 1-20 (or however long the cycle is)
+  dueDate     DateTime
+  amount      Int
+
+  paidAt     DateTime?
+  paidAmount Int?
+  status     PaymentStatus @default(PENDING)
+
   // Penalties
-  hasFine         Boolean        @default(false)
-  fineAmount      Int            @default(0)
-  finePaid        Boolean        @default(false)
-  
-  proofOfPayment  String?        // URL to uploaded receipt
-  verifiedBy      String?        // Admin who verified
-  verifiedAt      DateTime?
-  
-  notes           String?
-  
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  
+  hasFine    Boolean @default(false)
+  fineAmount Int     @default(0)
+  finePaid   Boolean @default(false)
+
+  proofOfPayment String? // URL to uploaded receipt
+  verifiedBy     String? // Admin who verified
+  verifiedAt     DateTime?
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@unique([participationId, monthNumber])
   @@index([status, dueDate])
 }
 
 model Payout {
-  id              String         @id @default(uuid())
-  participationId String         @unique
-  participation   Participation  @relation(fields: [participationId], references: [id], onDelete: Cascade)
-  
-  userId          String
-  user            User           @relation(fields: [userId], references: [id])
-  
-  cycleId         String
-  cycle           ContributionCycle @relation(fields: [cycleId], references: [id])
-  
-  amount          Int
-  scheduledMonth  Int            // When they should receive (based on picked number)
-  scheduledDate   DateTime
-  
-  paidAt          DateTime?
-  status          PaymentStatus  @default(PENDING)
-  
+  id              String        @id @default(uuid())
+  participationId String        @unique
+  participation   Participation @relation(fields: [participationId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  cycleId String
+  cycle   ContributionCycle @relation(fields: [cycleId], references: [id])
+
+  amount         Int
+  scheduledMonth Int // When they should receive (based on picked number)
+  scheduledDate  DateTime
+
+  paidAt DateTime?
+  status PaymentStatus @default(PENDING)
+
   transferReference String?
-  processedBy     String?        // Admin who processed
-  
-  notes           String?
-  
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  
+  processedBy       String? // Admin who processed
+
+  notes String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([status, scheduledDate])
 }
 
 model OptOutRequest {
-  id              String         @id @default(uuid())
-  userId          String
-  user            User           @relation(fields: [userId], references: [id])
-  
-  cycleId         String
-  reason          String
-  status          OptOutStatus   @default(PENDING_APPROVAL)
-  
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  cycleId String
+  reason  String
+  status  OptOutStatus @default(PENDING_APPROVAL)
+
   // Financial settlement
-  totalPaid       Int            // How much they've contributed
-  penaltyAmount   Int            @default(0)
-  refundAmount    Int            @default(0)
-  
-  requestedAt     DateTime       @default(now())
-  reviewedAt      DateTime?
-  reviewedBy      String?        // Admin who reviewed
-  reviewNotes     String?
-  
+  totalPaid     Int // How much they've contributed
+  penaltyAmount Int @default(0)
+  refundAmount  Int @default(0)
+
+  requestedAt DateTime  @default(now())
+  reviewedAt  DateTime?
+  reviewedBy  String? // Admin who reviewed
+  reviewNotes String?
+
   @@index([status, requestedAt])
 }
 
 model SystemSettings {
-  id                    String   @id @default(uuid())
-  
+  id String @id @default(uuid())
+
   // Contribution settings
-  pack20kMonthly        Int      @default(20000)
-  pack20kPayout         Int      @default(200000)
-  pack20kFine           Int      @default(2000)
-  
-  pack50kMonthly        Int      @default(50000)
-  pack50kPayout         Int      @default(500000)
-  pack50kFine           Int      @default(2500)
-  
-  pack100kMonthly       Int      @default(100000)
-  pack100kPayout        Int      @default(1000000)
-  pack100kFine          Int      @default(5000)
-  
+  pack20kMonthly Int @default(20000)
+  pack20kPayout  Int @default(200000)
+  pack20kFine    Int @default(2000)
+
+  pack50kMonthly Int @default(50000)
+  pack50kPayout  Int @default(500000)
+  pack50kFine    Int @default(2500)
+
+  pack100kMonthly Int @default(100000)
+  pack100kPayout  Int @default(1000000)
+  pack100kFine    Int @default(5000)
+
   // Opt-out penalties
-  optOutPenaltyPercent  Int      @default(10) // 10% of total paid
-  
-  updatedAt             DateTime @updatedAt
-  updatedBy             String?
+  optOutPenaltyPercent Int @default(10) // 10% of total paid
+
+  updatedAt DateTime @updatedAt
+  updatedBy String?
 }
-
-
 
 model NumberPick {
   id        String   @id @default(uuid())
@@ -253,9 +252,9 @@ model NumberPick {
 }
 
 model NumberSettings {
-  id             String   @id @default(uuid())
-  totalNumbers   Int      @default(20)
-  isActive       Boolean  @default(true)
-  updatedAt      DateTime @updatedAt
-  createdAt      DateTime @default(now())
+  id           String   @id @default(uuid())
+  totalNumbers Int      @default(20)
+  isActive     Boolean  @default(true)
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
 }

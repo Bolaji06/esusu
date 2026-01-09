@@ -57,6 +57,10 @@ const userStatus = [
     value: "suspended",
     label: "Suspended",
   },
+  {
+    value: "deleted",
+    label: "Deleted",
+  },
 ];
 
 export default function UserManagementView({
@@ -325,11 +329,10 @@ export default function UserManagementView({
                     )}
                     <button
                       onClick={() => handlePageChange(page)}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        page === currentPage
+                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${page === currentPage
                           ? "bg-indigo-600 text-white"
                           : "border border-gray-300 text-gray-700 hover:bg-gray-50"
-                      }`}
+                        }`}
                     >
                       {page}
                     </button>
