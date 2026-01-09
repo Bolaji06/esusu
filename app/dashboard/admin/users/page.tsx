@@ -9,7 +9,7 @@ import UserManagementView from "@/src/components/admin/UserManagementView";
 export default async function AdminUsersPage({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string; status?: string };
+  searchParams: Promise<{ page?: string; search?: string; status?: string }>;
 }) {
   const user = await getCurrentUser();
 
@@ -21,9 +21,10 @@ export default async function AdminUsersPage({
     redirect("/dashboard");
   }
 
-  const page = parseInt(searchParams.page || "1");
-  const search = searchParams.search || "";
-  const status = searchParams.status || "all";
+  const resolvedSearchParams = await searchParams;
+  const page = parseInt(resolvedSearchParams.page || "1");
+  const search = resolvedSearchParams.search || "";
+  const status = resolvedSearchParams.status || "all";
 
   const [usersData, stats] = await Promise.all([
     getAllUsersWithDetails(page, 20, search, status),
