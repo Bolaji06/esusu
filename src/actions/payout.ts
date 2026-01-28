@@ -1,8 +1,8 @@
 "use server";
 
-import { Prisma } from "@/app/generated/prisma/client";
 import { revalidatePath } from "next/cache";
 import { prisma } from "../lib/prisma";
+import { Prisma } from "@/generated/prisma/client";
 
 // Get all payouts with filters
 export async function getAllPayouts(
