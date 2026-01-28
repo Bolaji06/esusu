@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 import { ContributionMode } from "@/app/generated/prisma/enums";
 
@@ -177,29 +177,54 @@ export async function joinCycle(prevState: unknown, formData: FormData) {
     }
 
     // Create participation with bank details in a transaction
-    const participation = await prisma.$transaction(async (tx) => {
-      const newParticipation = await tx.participation.create({
-        data: {
-          userId,
-          cycleId,
-          contributionMode,
-          monthlyAmount,
-          totalPayout,
-          fineAmount,
-        },
-      });
+    const participation = await prisma.$transaction(
+      async (tx: {
+        participation: {
+          create: (arg0: {
+            data: {
+              userId: string;
+              cycleId: string;
+              contributionMode: ContributionMode;
+              monthlyAmount: number;
+              totalPayout: number;
+              fineAmount: number;
+            };
+          }) => any;
+        };
+        bankDetails: {
+          create: (arg0: {
+            data: {
+              participationId: any;
+              bankName: string;
+              accountNumber: string;
+              accountName: string;
+            };
+          }) => any;
+        };
+      }) => {
+        const newParticipation = await tx.participation.create({
+          data: {
+            userId,
+            cycleId,
+            contributionMode,
+            monthlyAmount,
+            totalPayout,
+            fineAmount,
+          },
+        });
 
-      await tx.bankDetails.create({
-        data: {
-          participationId: newParticipation.id,
-          bankName,
-          accountNumber,
-          accountName,
-        },
-      });
+        await tx.bankDetails.create({
+          data: {
+            participationId: newParticipation.id,
+            bankName,
+            accountNumber,
+            accountName,
+          },
+        });
 
-      return newParticipation;
-    });
+        return newParticipation;
+      },
+    );
 
     revalidatePath("/dashboard");
 
@@ -234,18 +259,30 @@ export async function getAvailableCycles() {
       orderBy: { startDate: "asc" },
     });
 
-    return cycles.map((cycle) => ({
-      id: cycle.id,
-      name: cycle.name,
-      startDate: cycle.startDate,
-      endDate: cycle.endDate,
-      registrationDeadline: cycle.registrationDeadline,
-      numberPickingStartDate: cycle.numberPickingStartDate,
-      status: cycle.status,
-      totalSlots: cycle.totalSlots,
-      availableSlots: cycle.totalSlots - cycle.participations.length,
-      participantCount: cycle.participations.length,
-    }));
+    return cycles.map(
+      (cycle: {
+        id: any;
+        name: any;
+        startDate: any;
+        endDate: any;
+        registrationDeadline: any;
+        numberPickingStartDate: any;
+        status: any;
+        totalSlots: number;
+        participations: string | any[];
+      }) => ({
+        id: cycle.id,
+        name: cycle.name,
+        startDate: cycle.startDate,
+        endDate: cycle.endDate,
+        registrationDeadline: cycle.registrationDeadline,
+        numberPickingStartDate: cycle.numberPickingStartDate,
+        status: cycle.status,
+        totalSlots: cycle.totalSlots,
+        availableSlots: cycle.totalSlots - cycle.participations.length,
+        participantCount: cycle.participations.length,
+      }),
+    );
   } catch (error) {
     console.error("Error getting available cycles:", error);
     return [];

@@ -1,6 +1,5 @@
 "use server";
-
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export interface ActionState {
@@ -96,8 +95,8 @@ export async function getOptOutInfo(userId: string) {
 
     // Calculate totals
     const totalPaid = participation.payments.reduce(
-      (sum, p) => sum + (p.paidAmount || 0),
-      0
+      (sum: any, p: { paidAmount: any }) => sum + (p.paidAmount || 0),
+      0,
     );
     const penaltyAmount = Math.floor((totalPaid * penaltyPercent) / 100);
     const refundAmount = totalPaid - penaltyAmount;
@@ -136,7 +135,7 @@ export async function getOptOutInfo(userId: string) {
 // Submit opt-out request
 export async function submitOptOutRequest(
   prevState: ActionState | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionState> {
   const userId = formData.get("userId") as string;
   const cycleId = formData.get("cycleId") as string;
@@ -201,7 +200,8 @@ export async function submitOptOutRequest(
 
     return {
       success: true,
-      message: "Opt-out request submitted successfully. Please wait for admin approval.",
+      message:
+        "Opt-out request submitted successfully. Please wait for admin approval.",
       requestId: request.id,
     };
   } catch (error) {
@@ -229,25 +229,42 @@ export async function getUserOptOutRequests(userId: string) {
     });
 
     // Get cycle names
-    const cycleIds = [...new Set(requests.map((r) => r.cycleId))];
+    const cycleIds = [
+      ...new Set(requests.map((r: { cycleId: any }) => r.cycleId)),
+    ];
     const cycles = await prisma.contributionCycle.findMany({
       where: { id: { in: cycleIds } },
       select: { id: true, name: true },
     });
-    const cycleMap = new Map(cycles.map((c) => [c.id, c.name]));
+    const cycleMap = new Map(
+      cycles.map((c: { id: any; name: any }) => [c.id, c.name]),
+    );
 
-    return requests.map((r) => ({
-      id: r.id,
-      cycleName: cycleMap.get(r.cycleId) || "Unknown Cycle",
-      reason: r.reason,
-      status: r.status,
-      totalPaid: r.totalPaid,
-      penaltyAmount: r.penaltyAmount,
-      refundAmount: r.refundAmount,
-      requestedAt: r.requestedAt,
-      reviewedAt: r.reviewedAt,
-      reviewNotes: r.reviewNotes,
-    }));
+    return requests.map(
+      (r: {
+        id: any;
+        cycleId: unknown;
+        reason: any;
+        status: any;
+        totalPaid: any;
+        penaltyAmount: any;
+        refundAmount: any;
+        requestedAt: any;
+        reviewedAt: any;
+        reviewNotes: any;
+      }) => ({
+        id: r.id,
+        cycleName: cycleMap.get(r.cycleId) || "Unknown Cycle",
+        reason: r.reason,
+        status: r.status,
+        totalPaid: r.totalPaid,
+        penaltyAmount: r.penaltyAmount,
+        refundAmount: r.refundAmount,
+        requestedAt: r.requestedAt,
+        reviewedAt: r.reviewedAt,
+        reviewNotes: r.reviewNotes,
+      }),
+    );
   } catch (error) {
     console.error("Error getting user opt-out requests:", error);
     return [];
@@ -320,27 +337,42 @@ export async function getPendingOptOutRequests() {
     });
 
     // Get cycle names
-    const cycleIds = [...new Set(requests.map((r) => r.cycleId))];
+    const cycleIds = [
+      ...new Set(requests.map((r: { cycleId: any }) => r.cycleId)),
+    ];
     const cycles = await prisma.contributionCycle.findMany({
       where: { id: { in: cycleIds } },
       select: { id: true, name: true },
     });
-    const cycleMap = new Map(cycles.map((c) => [c.id, c.name]));
+    const cycleMap = new Map(
+      cycles.map((c: { id: any; name: any }) => [c.id, c.name]),
+    );
 
-    return requests.map((r) => ({
-      id: r.id,
-      userId: r.user.id,
-      userName: r.user.fullName,
-      userPhone: r.user.phone,
-      userEmail: r.user.email,
-      cycleId: r.cycleId,
-      cycleName: cycleMap.get(r.cycleId) || "Unknown Cycle",
-      reason: r.reason,
-      totalPaid: r.totalPaid,
-      penaltyAmount: r.penaltyAmount,
-      refundAmount: r.refundAmount,
-      requestedAt: r.requestedAt,
-    }));
+    return requests.map(
+      (r: {
+        id: any;
+        user: { id: any; fullName: any; phone: any; email: any };
+        cycleId: unknown;
+        reason: any;
+        totalPaid: any;
+        penaltyAmount: any;
+        refundAmount: any;
+        requestedAt: any;
+      }) => ({
+        id: r.id,
+        userId: r.user.id,
+        userName: r.user.fullName,
+        userPhone: r.user.phone,
+        userEmail: r.user.email,
+        cycleId: r.cycleId,
+        cycleName: cycleMap.get(r.cycleId) || "Unknown Cycle",
+        reason: r.reason,
+        totalPaid: r.totalPaid,
+        penaltyAmount: r.penaltyAmount,
+        refundAmount: r.refundAmount,
+        requestedAt: r.requestedAt,
+      }),
+    );
   } catch (error) {
     console.error("Error getting pending opt-out requests:", error);
     return [];
@@ -352,7 +384,7 @@ export async function reviewOptOutRequest(
   requestId: string,
   adminId: string,
   approved: boolean,
-  notes?: string
+  notes?: string,
 ) {
   try {
     // Verify admin

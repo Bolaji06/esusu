@@ -1,7 +1,6 @@
-
 "use server";
 
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 
 // Get user's payout information
 export async function getUserPayoutInfo(userId: string) {
@@ -28,20 +27,26 @@ export async function getUserPayoutInfo(userId: string) {
     });
 
     // Get active payout (next pending)
-    const activePayout = payouts.find((p) => p.status === "PENDING");
+    const activePayout = payouts.find((p: any) => p.status === "PENDING");
 
     // Get completed payouts
-    const completedPayouts = payouts.filter((p) => p.status === "PAID");
+    const completedPayouts = payouts.filter((p: any) => p.status === "PAID");
 
     // Calculate statistics
-    const totalExpected = payouts.reduce((sum, p) => sum + p.amount, 0);
-    const totalReceived = completedPayouts.reduce((sum, p) => sum + p.amount, 0);
+    const totalExpected = payouts.reduce(
+      (sum: number, p: any) => sum + p.amount,
+      0,
+    );
+    const totalReceived = completedPayouts.reduce(
+      (sum: number, p: any) => sum + p.amount,
+      0,
+    );
     const totalPending = payouts
-      .filter((p) => p.status === "PENDING")
-      .reduce((sum, p) => sum + p.amount, 0);
+      .filter((p: any) => p.status === "PENDING")
+      .reduce((sum: number, p: any) => sum + p.amount, 0);
 
     return {
-      payouts: payouts.map((p) => ({
+      payouts: payouts.map((p: any) => ({
         id: p.id,
         cycleName: p.participation.cycle.name,
         cycleStatus: p.participation.cycle.status,
@@ -76,7 +81,7 @@ export async function getUserPayoutInfo(userId: string) {
         totalReceived,
         totalPending,
         completedCount: completedPayouts.length,
-        pendingCount: payouts.filter((p) => p.status === "PENDING").length,
+        pendingCount: payouts.filter((p: any) => p.status === "PENDING").length,
       },
     };
   } catch (error) {
@@ -126,7 +131,9 @@ export async function getPayoutTimeline(userId: string) {
     });
 
     // Get user's position
-    const userPayout = allPayouts.find((p) => p.userId === userId);
+    const userPayout = allPayouts.find(
+      (p: { userId: string }) => p.userId === userId,
+    );
 
     // Calculate current month in the cycle
     const now = new Date();
@@ -135,10 +142,13 @@ export async function getPayoutTimeline(userId: string) {
       (now.getFullYear() - cycleStart.getFullYear()) * 12 +
       (now.getMonth() - cycleStart.getMonth()) +
       1;
-    const currentMonth = Math.max(1, Math.min(monthsDiff, activeCycle.totalSlots));
+    const currentMonth = Math.max(
+      1,
+      Math.min(monthsDiff, activeCycle.totalSlots),
+    );
 
     return {
-      timeline: allPayouts.map((p) => ({
+      timeline: allPayouts.map((p: any) => ({
         month: p.scheduledMonth,
         userName: p.user.fullName,
         userId: p.user.id,
@@ -191,8 +201,8 @@ export async function getPayoutDetails(payoutId: string, userId: string) {
     const totalPayments = payout.participation.cycle.totalSlots;
     const paidPayments = payout.participation.payments.length;
     const totalContributed = payout.participation.payments.reduce(
-      (sum, p) => sum + (p.paidAmount || 0),
-      0
+      (sum: number, p: any) => sum + (p.paidAmount || 0),
+      0,
     );
 
     return {

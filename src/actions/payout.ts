@@ -1,12 +1,12 @@
 "use server";
 
 import { Prisma } from "@/app/generated/prisma/client";
-import prisma from "../lib/prisma";
 import { revalidatePath } from "next/cache";
+import { prisma } from "../lib/prisma";
 
 // Get all payouts with filters
 export async function getAllPayouts(
-  filter: "all" | "pending" | "completed" = "all"
+  filter: "all" | "pending" | "completed" = "all",
 ) {
   try {
     const where: Prisma.PayoutWhereInput = {};
@@ -42,30 +42,49 @@ export async function getAllPayouts(
       },
     });
 
-    return payouts.map((p) => ({
-      id: p.id,
-      userId: p.userId,
-      userName: p.user.fullName,
-      userPhone: p.user.phone,
-      userEmail: p.user.email,
-      cycleName: p.participation.cycle.name,
-      contributionMode: p.participation.contributionMode,
-      amount: p.amount,
-      scheduledMonth: p.scheduledMonth,
-      scheduledDate: p.scheduledDate,
-      paidAt: p.paidAt,
-      status: p.status,
-      transferReference: p.transferReference,
-      processedBy: p.processedBy,
-      notes: p.notes,
-      bankDetails: p.participation.bankDetails
-        ? {
-          bankName: p.participation.bankDetails.bankName,
-          accountNumber: p.participation.bankDetails.accountNumber,
-          accountName: p.participation.bankDetails.accountName,
-        }
-        : null,
-    }));
+    return payouts.map(
+      (p: {
+        id: any;
+        userId: any;
+        user: { fullName: any; phone: any; email: any };
+        participation: {
+          cycle: { name: any };
+          contributionMode: any;
+          bankDetails: { bankName: any; accountNumber: any; accountName: any };
+        };
+        amount: any;
+        scheduledMonth: any;
+        scheduledDate: any;
+        paidAt: any;
+        status: any;
+        transferReference: any;
+        processedBy: any;
+        notes: any;
+      }) => ({
+        id: p.id,
+        userId: p.userId,
+        userName: p.user.fullName,
+        userPhone: p.user.phone,
+        userEmail: p.user.email,
+        cycleName: p.participation.cycle.name,
+        contributionMode: p.participation.contributionMode,
+        amount: p.amount,
+        scheduledMonth: p.scheduledMonth,
+        scheduledDate: p.scheduledDate,
+        paidAt: p.paidAt,
+        status: p.status,
+        transferReference: p.transferReference,
+        processedBy: p.processedBy,
+        notes: p.notes,
+        bankDetails: p.participation.bankDetails
+          ? {
+              bankName: p.participation.bankDetails.bankName,
+              accountNumber: p.participation.bankDetails.accountNumber,
+              accountName: p.participation.bankDetails.accountName,
+            }
+          : null,
+      }),
+    );
   } catch (error) {
     console.error("Error getting all payouts:", error);
     return [];
@@ -154,14 +173,23 @@ export async function getUpcomingPayouts() {
       },
     });
 
-    return payouts.map((p) => ({
-      id: p.id,
-      userName: p.user.fullName,
-      cycleName: p.participation.cycle.name,
-      amount: p.amount,
-      scheduledDate: p.scheduledDate,
-      scheduledMonth: p.scheduledMonth,
-    }));
+    return payouts.map(
+      (p: {
+        id: any;
+        user: { fullName: any };
+        participation: { cycle: { name: any } };
+        amount: any;
+        scheduledDate: any;
+        scheduledMonth: any;
+      }) => ({
+        id: p.id,
+        userName: p.user.fullName,
+        cycleName: p.participation.cycle.name,
+        amount: p.amount,
+        scheduledDate: p.scheduledDate,
+        scheduledMonth: p.scheduledMonth,
+      }),
+    );
   } catch (error) {
     console.error("Error getting upcoming payouts:", error);
     return [];
@@ -173,7 +201,7 @@ export async function processPayout(
   payoutId: string,
   adminId: string,
   transferReference: string,
-  notes?: string
+  notes?: string,
 ) {
   try {
     // Verify admin
@@ -247,7 +275,7 @@ export async function processPayout(
 export async function batchProcessPayouts(
   payoutIds: string[],
   adminId: string,
-  baseReference: string
+  baseReference: string,
 ) {
   try {
     // Verify admin
@@ -281,8 +309,8 @@ export async function batchProcessPayouts(
             transferReference: `${baseReference}-${index + 1}`,
             processedBy: adminId,
           },
-        })
-      )
+        }),
+      ),
     );
 
     const successful = results.filter((r) => r.status === "fulfilled").length;
@@ -292,8 +320,9 @@ export async function batchProcessPayouts(
 
     return {
       success: true,
-      message: `Processed ${successful} payout(s)${failed > 0 ? `, ${failed} failed` : ""
-        }`,
+      message: `Processed ${successful} payout(s)${
+        failed > 0 ? `, ${failed} failed` : ""
+      }`,
       successful,
       failed,
     };
@@ -326,17 +355,28 @@ export async function getUserPayouts(userId: string) {
       },
     });
 
-    return payouts.map((p) => ({
-      id: p.id,
-      cycleName: p.participation.cycle.name,
-      contributionMode: p.participation.contributionMode,
-      amount: p.amount,
-      scheduledMonth: p.scheduledMonth,
-      scheduledDate: p.scheduledDate,
-      paidAt: p.paidAt,
-      status: p.status,
-      transferReference: p.transferReference,
-    }));
+    return payouts.map(
+      (p: {
+        id: any;
+        participation: { cycle: { name: any }; contributionMode: any };
+        amount: any;
+        scheduledMonth: any;
+        scheduledDate: any;
+        paidAt: any;
+        status: any;
+        transferReference: any;
+      }) => ({
+        id: p.id,
+        cycleName: p.participation.cycle.name,
+        contributionMode: p.participation.contributionMode,
+        amount: p.amount,
+        scheduledMonth: p.scheduledMonth,
+        scheduledDate: p.scheduledDate,
+        paidAt: p.paidAt,
+        status: p.status,
+        transferReference: p.transferReference,
+      }),
+    );
   } catch (error) {
     console.error("Error getting user payouts:", error);
     return [];

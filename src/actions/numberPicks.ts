@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 
 // Constants for restricted numbers
@@ -161,42 +161,67 @@ export async function pickNumber(userId: string, number: number) {
     payoutDate.setDate(cycle.paymentDeadlineDay);
 
     // Use a transaction to update both participation and payout
-    const result = await prisma.$transaction(async (tx) => {
-      // Update participation with picked number
-      const updated = await tx.participation.update({
-        where: { id: participation.id },
-        data: { pickedNumber: number },
-      });
-
-      // Check if payout already exists
-      let payout = participation.payout;
-
-      if (payout) {
-        // Update existing payout
-        payout = await tx.payout.update({
-          where: { id: payout.id },
-          data: {
-            scheduledMonth: number,
-            scheduledDate: payoutDate,
-            amount: participation.totalPayout,
-          },
+    const result = await prisma.$transaction(
+      async (tx: {
+        participation: {
+          update: (arg0: {
+            where: { id: any };
+            data: { pickedNumber: number };
+          }) => any;
+        };
+        payout: {
+          update: (arg0: {
+            where: { id: any };
+            data: { scheduledMonth: number; scheduledDate: Date; amount: any };
+          }) => any;
+          create: (arg0: {
+            data: {
+              participationId: any;
+              userId: string;
+              cycleId: any;
+              amount: any;
+              scheduledMonth: number;
+              scheduledDate: Date;
+            };
+          }) => any;
+        };
+      }) => {
+        // Update participation with picked number
+        const updated = await tx.participation.update({
+          where: { id: participation.id },
+          data: { pickedNumber: number },
         });
-      } else {
-        // Create new payout
-        payout = await tx.payout.create({
-          data: {
-            participationId: participation.id,
-            userId,
-            cycleId: cycle.id,
-            amount: participation.totalPayout,
-            scheduledMonth: number,
-            scheduledDate: payoutDate,
-          },
-        });
-      }
 
-      return { updated, payout };
-    });
+        // Check if payout already exists
+        let payout = participation.payout;
+
+        if (payout) {
+          // Update existing payout
+          payout = await tx.payout.update({
+            where: { id: payout.id },
+            data: {
+              scheduledMonth: number,
+              scheduledDate: payoutDate,
+              amount: participation.totalPayout,
+            },
+          });
+        } else {
+          // Create new payout
+          payout = await tx.payout.create({
+            data: {
+              participationId: participation.id,
+              userId,
+              cycleId: cycle.id,
+              amount: participation.totalPayout,
+              scheduledMonth: number,
+              scheduledDate: payoutDate,
+            },
+          });
+        }
+
+        return { updated, payout };
+      },
+    );
 
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/pick-number");
@@ -271,8 +296,8 @@ export async function getAllPicks(userId: string) {
 
     // Add house reserved numbers to the taken list
     const userPicks = picks
-      .map((p) => p.pickedNumber)
-      .filter((n): n is number => n !== null);
+      .map((p: { pickedNumber: any }) => p.pickedNumber)
+      .filter((n: number | null): n is number => n !== null);
 
     return [...HOUSE_RESERVED_NUMBERS, ...userPicks];
   } catch (error) {

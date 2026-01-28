@@ -2,7 +2,7 @@
 
 "use server";
 
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 
@@ -35,7 +35,8 @@ export async function getUserProfile(userId: string) {
 
     // Get active participation with bank details
     const activeParticipation = user.participations.find(
-      (p) => p.cycle.status === "ACTIVE" && !p.hasOptedOut
+      (p: { cycle: { status: string }; hasOptedOut: any }) =>
+        p.cycle.status === "ACTIVE" && !p.hasOptedOut,
     );
 
     return {
@@ -59,14 +60,22 @@ export async function getUserProfile(userId: string) {
             bankDetails: activeParticipation.bankDetails,
           }
         : null,
-      participationHistory: user.participations.map((p) => ({
-        id: p.id,
-        cycleName: p.cycle.name,
-        cycleStatus: p.cycle.status,
-        contributionMode: p.contributionMode,
-        hasOptedOut: p.hasOptedOut,
-        registeredAt: p.registeredAt,
-      })),
+      participationHistory: user.participations.map(
+        (p: {
+          id: any;
+          cycle: { name: any; status: any };
+          contributionMode: any;
+          hasOptedOut: any;
+          registeredAt: any;
+        }) => ({
+          id: p.id,
+          cycleName: p.cycle.name,
+          cycleStatus: p.cycle.status,
+          contributionMode: p.contributionMode,
+          hasOptedOut: p.hasOptedOut,
+          registeredAt: p.registeredAt,
+        }),
+      ),
     };
   } catch (error) {
     console.error("Error getting user profile:", error);
@@ -75,10 +84,7 @@ export async function getUserProfile(userId: string) {
 }
 
 // Update personal information
-export async function updatePersonalInfo(
-  prevState: any,
-  formData: FormData
-) {
+export async function updatePersonalInfo(prevState: any, formData: FormData) {
   const userId = formData.get("userId") as string;
   const fullName = formData.get("fullName") as string;
   const email = formData.get("email") as string;
@@ -146,10 +152,7 @@ export async function updatePersonalInfo(
 }
 
 // Update phone number
-export async function updatePhoneNumber(
-  prevState: any,
-  formData: FormData
-) {
+export async function updatePhoneNumber(prevState: any, formData: FormData) {
   const userId = formData.get("userId") as string;
   const phone = formData.get("phone") as string;
   const password = formData.get("password") as string;
@@ -228,10 +231,7 @@ export async function updatePhoneNumber(
 }
 
 // Change password
-export async function changePassword(
-  prevState: any,
-  formData: FormData
-) {
+export async function changePassword(prevState: any, formData: FormData) {
   const userId = formData.get("userId") as string;
   const currentPassword = formData.get("currentPassword") as string;
   const newPassword = formData.get("newPassword") as string;
@@ -272,7 +272,10 @@ export async function changePassword(
       };
     }
 
-    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+    const isValidPassword = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
     if (!isValidPassword) {
       return {
         success: false,
@@ -302,10 +305,7 @@ export async function changePassword(
 }
 
 // Update bank details
-export async function updateBankDetails(
-  prevState: any,
-  formData: FormData
-) {
+export async function updateBankDetails(prevState: any, formData: FormData) {
   const participationId = formData.get("participationId") as string;
   const bankName = formData.get("bankName") as string;
   const accountNumber = formData.get("accountNumber") as string;

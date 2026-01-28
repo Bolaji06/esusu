@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "./lib/prisma";
+import { prisma } from "./lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export async function pickNumber(userId: string, number: number) {
@@ -57,7 +57,7 @@ export async function pickNumber(userId: string, number: number) {
 }
 
 export async function getUserPick(userId: string) {
-  try {  
+  try {
     const pick = await prisma.numberPick.findUnique({
       where: { userId },
     });
@@ -77,7 +77,7 @@ export async function getAllPicks() {
       },
     });
 
-    return picks.map((p) => p.number);
+    return picks.map((p: { number: number }) => p.number);
   } catch (error) {
     console.error("Error getting all picks:", error);
     return [];
@@ -100,7 +100,7 @@ export async function getAllUserPicks() {
       },
     });
 
-    return picks.map((pick) => ({
+    return picks.map((pick: any) => ({
       id: pick.id,
       number: pick.number,
       userName: pick.user.fullName,
@@ -141,5 +141,3 @@ export async function getPicksStats() {
     };
   }
 }
-
-

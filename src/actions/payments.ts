@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 import { uploadProofToSupabase } from "./uploadToSupabase";
 
@@ -42,22 +42,25 @@ export async function getUserPayments(userId: string) {
 
     // Calculate stats
     const paidPayments = participation.payments.filter(
-      (p) => p.status === "PAID"
+      (p: { status: string }) => p.status === "PAID",
     );
     const totalPaid = paidPayments.reduce(
-      (sum, p) => sum + (p.paidAmount || 0),
-      0
+      (sum: any, p: { paidAmount: any }) => sum + (p.paidAmount || 0),
+      0,
     );
     const totalFines = participation.payments.reduce(
-      (sum, p) => sum + (p.hasFine ? p.fineAmount : 0),
-      0
+      (sum: any, p: { hasFine: any; fineAmount: any }) =>
+        sum + (p.hasFine ? p.fineAmount : 0),
+      0,
     );
     const pendingCount = participation.payments.filter(
-      (p) => p.status === "PENDING"
+      (p: { status: string }) => p.status === "PENDING",
     ).length;
-    const overdueCount = participation.payments.filter((p) => {
-      return p.status === "PENDING" && new Date() > p.dueDate;
-    }).length;
+    const overdueCount = participation.payments.filter(
+      (p: { status: string; dueDate: number }) => {
+        return p.status === "PENDING" && new Date().getTime() > p.dueDate;
+      },
+    ).length;
 
     return {
       participation: {
@@ -67,22 +70,39 @@ export async function getUserPayments(userId: string) {
         monthlyAmount: participation.monthlyAmount,
         fineAmount: participation.fineAmount,
       },
-      payments: participation.payments.map((p) => ({
-        id: p.id,
-        monthNumber: p.monthNumber,
-        amount: p.amount,
-        dueDate: p.dueDate,
-        paidAt: p.paidAt,
-        paidAmount: p.paidAmount,
-        status: p.status,
-        hasFine: p.hasFine,
-        fineAmount: p.fineAmount,
-        finePaid: p.finePaid,
-        proofOfPayment: p.proofOfPayment,
-        verifiedBy: p.verifiedBy,
-        verifiedAt: p.verifiedAt,
-        notes: p.notes,
-      })),
+      payments: participation.payments.map(
+        (p: {
+          id: any;
+          monthNumber: any;
+          amount: any;
+          dueDate: any;
+          paidAt: any;
+          paidAmount: any;
+          status: any;
+          hasFine: any;
+          fineAmount: any;
+          finePaid: any;
+          proofOfPayment: any;
+          verifiedBy: any;
+          verifiedAt: any;
+          notes: any;
+        }) => ({
+          id: p.id,
+          monthNumber: p.monthNumber,
+          amount: p.amount,
+          dueDate: p.dueDate,
+          paidAt: p.paidAt,
+          paidAmount: p.paidAmount,
+          status: p.status,
+          hasFine: p.hasFine,
+          fineAmount: p.fineAmount,
+          finePaid: p.finePaid,
+          proofOfPayment: p.proofOfPayment,
+          verifiedBy: p.verifiedBy,
+          verifiedAt: p.verifiedAt,
+          notes: p.notes,
+        }),
+      ),
       stats: {
         totalPaid,
         totalFines,
@@ -105,7 +125,10 @@ export async function getUserPayments(userId: string) {
   }
 }
 
-export async function recordPayment(prevState: ActionState | null, formData: FormData): Promise<ActionState> {
+export async function recordPayment(
+  prevState: ActionState | null,
+  formData: FormData,
+): Promise<ActionState> {
   const paymentId = formData.get("paymentId") as string;
   const amount = parseFloat(formData.get("amount") as string);
   const proofUrl = formData.get("proofUrl") as string;
@@ -175,7 +198,7 @@ export async function recordPayment(prevState: ActionState | null, formData: For
 
 export async function uploadPaymentProof(
   prevState: ActionState | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionState> {
   const paymentId = formData.get("paymentId") as string;
   const file = formData.get("proof") as File;

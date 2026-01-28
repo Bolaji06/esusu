@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 
 // Get financial summary report
 export async function getFinancialSummary(cycleId?: string) {
@@ -18,13 +18,14 @@ export async function getFinancialSummary(cycleId?: string) {
     });
 
     const totalCollected = paidPayments.reduce(
-      (sum, p) => sum + (p.paidAmount || 0),
-      0
+      (sum: any, p: { paidAmount: any }) => sum + (p.paidAmount || 0),
+      0,
     );
 
     const totalFines = paidPayments.reduce(
-      (sum, p) => sum + (p.hasFine ? p.fineAmount : 0),
-      0
+      (sum: any, p: { hasFine: any; fineAmount: any }) =>
+        sum + (p.hasFine ? p.fineAmount : 0),
+      0,
     );
 
     // Pending collections
@@ -33,11 +34,18 @@ export async function getFinancialSummary(cycleId?: string) {
       select: { amount: true, fineAmount: true, dueDate: true },
     });
 
-    const pendingAmount = pendingPayments.reduce((sum, p) => sum + p.amount, 0);
-    
+    const pendingAmount = pendingPayments.reduce(
+      (sum: any, p: { amount: any }) => sum + p.amount,
+      0,
+    );
+
     const overdueAmount = pendingPayments
-      .filter((p) => new Date() > p.dueDate)
-      .reduce((sum, p) => sum + p.amount + p.fineAmount, 0);
+      .filter((p: { dueDate: Date }) => new Date() > p.dueDate)
+      .reduce(
+        (sum: any, p: { amount: any; fineAmount: any }) =>
+          sum + p.amount + p.fineAmount,
+        0,
+      );
 
     // Payouts
     const completedPayouts = await prisma.payout.aggregate({
@@ -118,44 +126,67 @@ export async function getDefaultersReport(cycleId?: string) {
     });
 
     // Group by user
-    const defaultersByUser = overduePayments.reduce((acc, payment) => {
-      const userId = payment.userId;
-      if (!acc[userId]) {
-        acc[userId] = {
-          userId: payment.user.id,
-          userName: payment.user.fullName,
-          userPhone: payment.user.phone,
-          userEmail: payment.user.email,
-          overduePayments: [],
-          totalOverdue: 0,
-          totalFines: 0,
-        };
-      }
+    const defaultersByUser = overduePayments.reduce(
+      (
+        acc: Record<
+          string,
+          {
+            userId: string;
+            userName: string;
+            userPhone: string;
+            userEmail: string | null;
+            overduePayments: any[];
+            totalOverdue: number;
+            totalFines: number;
+          }
+        >,
+        payment: any,
+      ) => {
+        const userId = payment.userId;
+        if (!acc[userId]) {
+          acc[userId] = {
+            userId: payment.user.id,
+            userName: payment.user.fullName,
+            userPhone: payment.user.phone,
+            userEmail: payment.user.email,
+            overduePayments: [],
+            totalOverdue: 0,
+            totalFines: 0,
+          };
+        }
 
-      const isOverdue = new Date() > payment.dueDate;
-      const fineAmount = isOverdue ? payment.participation.contributionMode === "PACK_20K" ? 2000 : payment.participation.contributionMode === "PACK_50K" ? 2500 : 5000 : 0;
+        const isOverdue = new Date() > payment.dueDate;
+        const fineAmount = isOverdue
+          ? payment.participation.contributionMode === "PACK_20K"
+            ? 2000
+            : payment.participation.contributionMode === "PACK_50K"
+              ? 2500
+              : 5000
+          : 0;
 
-      acc[userId].overduePayments.push({
-        id: payment.id,
-        cycleName: payment.participation.cycle.name,
-        monthNumber: payment.monthNumber,
-        amount: payment.amount,
-        dueDate: payment.dueDate,
-        fineAmount,
-        daysPastDue: Math.floor(
-          (new Date().getTime() - payment.dueDate.getTime()) /
-            (1000 * 60 * 60 * 24)
-        ),
-      });
+        acc[userId].overduePayments.push({
+          id: payment.id,
+          cycleName: payment.participation.cycle.name,
+          monthNumber: payment.monthNumber,
+          amount: payment.amount,
+          dueDate: payment.dueDate,
+          fineAmount,
+          daysPastDue: Math.floor(
+            (new Date().getTime() - payment.dueDate.getTime()) /
+              (1000 * 60 * 60 * 24),
+          ),
+        });
 
-      acc[userId].totalOverdue += payment.amount + fineAmount;
-      acc[userId].totalFines += fineAmount;
+        acc[userId].totalOverdue += payment.amount + fineAmount;
+        acc[userId].totalFines += fineAmount;
 
-      return acc;
-    }, {} as Record<string, any>);
+        return acc;
+      },
+      {},
+    );
 
     return Object.values(defaultersByUser).sort(
-      (a: any, b: any) => b.totalOverdue - a.totalOverdue
+      (a: any, b: any) => b.totalOverdue - a.totalOverdue,
     );
   } catch (error) {
     console.error("Error getting defaulters report:", error);
@@ -183,34 +214,43 @@ export async function getCyclePerformance() {
       orderBy: { startDate: "desc" },
     });
 
-    return cycles.map((cycle) => {
+    return cycles.map((cycle: any) => {
       const totalParticipants = cycle.participations.length;
       const totalSlots = cycle.totalSlots;
       const occupancyRate = (totalParticipants / totalSlots) * 100;
 
-      const totalCollected = cycle.participations.reduce((sum, p) => {
-        return (
-          sum +
-          p.payments.reduce((pSum, pay) => pSum + (pay.paidAmount || 0), 0)
-        );
-      }, 0);
+      const totalCollected = cycle.participations.reduce(
+        (sum: any, p: { payments: any[] }) => {
+          return (
+            sum +
+            p.payments.reduce(
+              (pSum: any, pay: { paidAmount: any }) =>
+                pSum + (pay.paidAmount || 0),
+              0,
+            )
+          );
+        },
+        0,
+      );
 
       const pendingPayments = cycle.payments.length;
       const overduePayments = cycle.payments.filter(
-        (p) => new Date() > p.dueDate
+        (p: { dueDate: Date }) => new Date() > p.dueDate,
       ).length;
 
-      const completedPayouts = cycle.payouts.filter((p) => p.status === "PAID")
-        .length;
-      const pendingPayouts = cycle.payouts.filter((p) => p.status === "PENDING")
-        .length;
+      const completedPayouts = cycle.payouts.filter(
+        (p: { status: string }) => p.status === "PAID",
+      ).length;
+      const pendingPayouts = cycle.payouts.filter(
+        (p: { status: string }) => p.status === "PENDING",
+      ).length;
 
       const totalExpectedCollection =
         cycle.participations.length *
         (cycle.participations[0]?.monthlyAmount || 0) *
         Math.ceil(
           (cycle.endDate.getTime() - cycle.startDate.getTime()) /
-            (1000 * 60 * 60 * 24 * 30)
+            (1000 * 60 * 60 * 24 * 30),
         );
 
       const collectionRate =
@@ -280,13 +320,14 @@ export async function getMonthlyReconciliation(month: number, year: number) {
     });
 
     const totalReceived = paymentsReceived.reduce(
-      (sum, p) => sum + (p.paidAmount || 0),
-      0
+      (sum: any, p: { paidAmount: any }) => sum + (p.paidAmount || 0),
+      0,
     );
 
     const finesReceived = paymentsReceived.reduce(
-      (sum, p) => sum + (p.hasFine ? p.fineAmount : 0),
-      0
+      (sum: any, p: { hasFine: any; fineAmount: any }) =>
+        sum + (p.hasFine ? p.fineAmount : 0),
+      0,
     );
 
     // Payouts made in this month
@@ -312,7 +353,10 @@ export async function getMonthlyReconciliation(month: number, year: number) {
       },
     });
 
-    const totalPaidOut = payoutsMade.reduce((sum, p) => sum + p.amount, 0);
+    const totalPaidOut = payoutsMade.reduce(
+      (sum: any, p: { amount: any }) => sum + p.amount,
+      0,
+    );
 
     // Net cash flow
     const netCashFlow = totalReceived - totalPaidOut;
@@ -328,27 +372,46 @@ export async function getMonthlyReconciliation(month: number, year: number) {
         count: paymentsReceived.length,
         total: totalReceived,
         fines: finesReceived,
-        details: paymentsReceived.map((p) => ({
-          id: p.id,
-          userName: p.user.fullName,
-          cycleName: p.participation.cycle.name,
-          amount: p.paidAmount,
-          paidAt: p.paidAt,
-          hasFine: p.hasFine,
-          fineAmount: p.fineAmount,
-        })),
+        details: paymentsReceived.map(
+          (p: {
+            id: any;
+            user: { fullName: any };
+            participation: { cycle: { name: any } };
+            paidAmount: any;
+            paidAt: any;
+            hasFine: any;
+            fineAmount: any;
+          }) => ({
+            id: p.id,
+            userName: p.user.fullName,
+            cycleName: p.participation.cycle.name,
+            amount: p.paidAmount,
+            paidAt: p.paidAt,
+            hasFine: p.hasFine,
+            fineAmount: p.fineAmount,
+          }),
+        ),
       },
       payouts: {
         count: payoutsMade.length,
         total: totalPaidOut,
-        details: payoutsMade.map((p) => ({
-          id: p.id,
-          userName: p.user.fullName,
-          cycleName: p.participation.cycle.name,
-          amount: p.amount,
-          paidAt: p.paidAt,
-          transferReference: p.transferReference,
-        })),
+        details: payoutsMade.map(
+          (p: {
+            id: any;
+            user: { fullName: any };
+            participation: { cycle: { name: any } };
+            amount: any;
+            paidAt: any;
+            transferReference: any;
+          }) => ({
+            id: p.id,
+            userName: p.user.fullName,
+            cycleName: p.participation.cycle.name,
+            amount: p.amount,
+            paidAt: p.paidAt,
+            transferReference: p.transferReference,
+          }),
+        ),
       },
       summary: {
         totalReceived,
@@ -373,12 +436,12 @@ export async function getPaymentTrends() {
       const monthDate = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth() - i,
-        1
+        1,
       );
       const nextMonth = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth() - i + 1,
-        1
+        1,
       );
 
       const payments = await prisma.payment.aggregate({
@@ -440,7 +503,8 @@ export async function exportReportData(reportType: string, data: any) {
         break;
 
       case "cycles":
-        csv = "Cycle,Status,Participants,Occupancy Rate,Total Collected,Collection Rate\n";
+        csv =
+          "Cycle,Status,Participants,Occupancy Rate,Total Collected,Collection Rate\n";
         data.forEach((c: any) => {
           csv += `${c.name},${c.status},${c.participants.total}/${c.participants.capacity},${c.participants.occupancyRate}%,${c.collections.total},${c.collections.collectionRate}%\n`;
         });

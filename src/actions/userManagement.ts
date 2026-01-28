@@ -2,7 +2,7 @@
 
 "use server";
 
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 
 // Get all users with filters and pagination
@@ -10,7 +10,7 @@ export async function getAllUsersWithDetails(
   page: number = 1,
   limit: number = 20,
   searchTerm?: string,
-  statusFilter?: string
+  statusFilter?: string,
 ) {
   try {
     const skip = (page - 1) * limit;
@@ -59,34 +59,64 @@ export async function getAllUsersWithDetails(
     ]);
 
     return {
-      users: users.map((u) => {
-        const totalContributed = u.participations.reduce((sum, p) => {
-          return (
-            sum +
-            p.payments.reduce((pSum, pay) => pSum + (pay.paidAmount || 0), 0)
+      users: users.map(
+        (u: {
+          participations: {
+            reduce: (arg0: (sum: any, p: any) => any, arg1: number) => any;
+            length: any;
+            filter: (arg0: (p: any) => boolean) => {
+              (): any;
+              new (): any;
+              length: any;
+            };
+          };
+          payments: string | any[];
+          id: any;
+          fullName: any;
+          phone: any;
+          email: any;
+          occupation: any;
+          address: any;
+          isAdmin: any;
+          status: any;
+          createdAt: any;
+        }) => {
+          const totalContributed = u.participations.reduce(
+            (sum: any, p: { payments: any[] }) => {
+              return (
+                sum +
+                p.payments.reduce(
+                  (pSum: any, pay: { paidAmount: any }) =>
+                    pSum + (pay.paidAmount || 0),
+                  0,
+                )
+              );
+            },
+            0,
           );
-        }, 0);
 
-        const overduePayments = u.payments.length;
+          const overduePayments = u.payments.length;
 
-        return {
-          id: u.id,
-          fullName: u.fullName,
-          phone: u.phone,
-          email: u.email,
-          occupation: u.occupation,
-          address: u.address,
-          isAdmin: u.isAdmin,
-          status: u.status,
-          createdAt: u.createdAt,
-          participationCount: u.participations.length,
-          activeParticipations: u.participations.filter(
-            (p) => p.cycle.status === "ACTIVE" && !p.hasOptedOut
-          ).length,
-          totalContributed,
-          overduePayments,
-        };
-      }),
+          return {
+            id: u.id,
+            fullName: u.fullName,
+            phone: u.phone,
+            email: u.email,
+            occupation: u.occupation,
+            address: u.address,
+            isAdmin: u.isAdmin,
+            status: u.status,
+            createdAt: u.createdAt,
+            participationCount: u.participations.length,
+            activeParticipations: u.participations.filter(
+              (p: { cycle: { status: string }; hasOptedOut: any }) =>
+                p.cycle.status === "ACTIVE" && !p.hasOptedOut,
+            ).length,
+            totalContributed,
+            overduePayments,
+          };
+        },
+      ),
       pagination: {
         page,
         limit,
@@ -132,34 +162,46 @@ export async function getUserDetails(userId: string) {
     }
 
     // Calculate statistics
-    const totalContributed = user.participations.reduce((sum, p) => {
-      return (
-        sum +
-        p.payments
-          .filter((pay) => pay.status === "PAID")
-          .reduce((pSum, pay) => pSum + (pay.paidAmount || 0), 0)
-      );
-    }, 0);
+    const totalContributed = user.participations.reduce(
+      (sum: any, p: { payments: any[] }) => {
+        return (
+          sum +
+          p.payments
+            .filter((pay: { status: string }) => pay.status === "PAID")
+            .reduce(
+              (pSum: any, pay: { paidAmount: any }) =>
+                pSum + (pay.paidAmount || 0),
+              0,
+            )
+        );
+      },
+      0,
+    );
 
-    const totalFines = user.participations.reduce((sum, p) => {
-      return (
-        sum +
-        p.payments.reduce(
-          (fSum, pay) => fSum + (pay.hasFine ? pay.fineAmount : 0),
-          0
-        )
-      );
-    }, 0);
+    const totalFines = user.participations.reduce(
+      (sum: any, p: { payments: any[] }) => {
+        return (
+          sum +
+          p.payments.reduce(
+            (fSum: any, pay: { hasFine: any; fineAmount: any }) =>
+              fSum + (pay.hasFine ? pay.fineAmount : 0),
+            0,
+          )
+        );
+      },
+      0,
+    );
 
     const overduePayments = user.payments.filter(
-      (p) => p.status === "PENDING" && new Date() > p.dueDate
+      (p: any) => p.status === "PENDING" && new Date() > p.dueDate,
     ).length;
 
-    const completedPayouts = user.payouts.filter((p) => p.status === "PAID")
-      .length;
+    const completedPayouts = user.payouts.filter(
+      (p: { status: string }) => p.status === "PAID",
+    ).length;
     const totalPayoutsReceived = user.payouts
-      .filter((p) => p.status === "PAID")
-      .reduce((sum, p) => sum + p.amount, 0);
+      .filter((p: { status: string }) => p.status === "PAID")
+      .reduce((sum: any, p: { amount: any }) => sum + p.amount, 0);
 
     return {
       user: {
@@ -181,29 +223,55 @@ export async function getUserDetails(userId: string) {
         totalPayoutsReceived,
         participationCount: user.participations.length,
         activeParticipations: user.participations.filter(
-          (p) => p.cycle.status === "ACTIVE" && !p.hasOptedOut
+          (p: { cycle: { status: string }; hasOptedOut: any }) =>
+            p.cycle.status === "ACTIVE" && !p.hasOptedOut,
         ).length,
       },
-      participations: user.participations.map((p) => ({
-        id: p.id,
-        cycleName: p.cycle.name,
-        cycleStatus: p.cycle.status,
-        contributionMode: p.contributionMode,
-        pickedNumber: p.pickedNumber,
-        monthlyAmount: p.monthlyAmount,
-        totalPayout: p.totalPayout,
-        hasOptedOut: p.hasOptedOut,
-        registeredAt: p.registeredAt,
-        bankDetails: p.bankDetails,
-        paidPayments: p.payments.filter((pay) => pay.status === "PAID").length,
-        totalPayments: p.payments.length,
-        payout: p.payout,
-      })),
+      participations: user.participations.map(
+        (p: {
+          id: any;
+          cycle: { name: any; status: any };
+          contributionMode: any;
+          pickedNumber: any;
+          monthlyAmount: any;
+          totalPayout: any;
+          hasOptedOut: any;
+          registeredAt: any;
+          bankDetails: any;
+          payments: {
+            filter: (arg0: (pay: any) => boolean) => {
+              (): any;
+              new (): any;
+              length: any;
+            };
+            length: any;
+          };
+          payout: any;
+        }) => ({
+          id: p.id,
+          cycleName: p.cycle.name,
+          cycleStatus: p.cycle.status,
+          contributionMode: p.contributionMode,
+          pickedNumber: p.pickedNumber,
+          monthlyAmount: p.monthlyAmount,
+          totalPayout: p.totalPayout,
+          hasOptedOut: p.hasOptedOut,
+          registeredAt: p.registeredAt,
+          bankDetails: p.bankDetails,
+          paidPayments: p.payments.filter(
+            (pay: { status: string }) => pay.status === "PAID",
+          ).length,
+          totalPayments: p.payments.length,
+          payout: p.payout,
+        }),
+      ),
       recentPayments: user.payments
-        .filter((p) => p.status === "PAID")
+        .filter((p: { status: string }) => p.status === "PAID")
         .sort(
-          (a, b) =>
-            (b.paidAt?.getTime() || 0) - (a.paidAt?.getTime() || 0)
+          (
+            a: { paidAt: { getTime: () => any } },
+            b: { paidAt: { getTime: () => any } },
+          ) => (b.paidAt?.getTime() || 0) - (a.paidAt?.getTime() || 0),
         )
         .slice(0, 5),
       optOutRequests: user.optOutRequests,
@@ -218,7 +286,7 @@ export async function getUserDetails(userId: string) {
 export async function suspendUser(
   userId: string,
   adminId: string,
-  reason: string
+  reason: string,
 ) {
   try {
     // Verify admin
@@ -270,7 +338,7 @@ export async function suspendUser(
 
     // Log the action (you can create an audit log table for this)
     console.log(
-      `User ${userId} suspended by admin ${adminId}. Reason: ${reason}`
+      `User ${userId} suspended by admin ${adminId}. Reason: ${reason}`,
     );
 
     revalidatePath("/dashboard/admin/users");
@@ -488,11 +556,7 @@ export async function getUserManagementStats() {
         prisma.user.count({
           where: {
             createdAt: {
-              gte: new Date(
-                new Date().getFullYear(),
-                new Date().getMonth(),
-                1
-              ),
+              gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
             },
           },
         }),
@@ -521,7 +585,7 @@ export async function getUserManagementStats() {
 export async function deleteUser(
   userId: string,
   adminId: string,
-  reason: string
+  reason: string,
 ) {
   try {
     // Verify admin
@@ -563,29 +627,44 @@ export async function deleteUser(
       };
     }
 
-    // Check if user has active participations
-    const hasActiveParticipations = user.participations.some(
-      (p) => p.cycle.status === "ACTIVE" && !p.hasOptedOut
+    // Free up spots in active/upcoming cycles and soft delete user
+    await prisma.$transaction(
+      async (tx: {
+        participation: {
+          deleteMany: (arg0: {
+            where: { userId: string; cycle: { status: { in: string[] } } };
+          }) => any;
+        };
+        user: {
+          update: (arg0: {
+            where: { id: string };
+            data: { status: string };
+          }) => any;
+        };
+      }) => {
+        // Delete participations in active/upcoming cycles
+        // This frees up the spot and the picked number
+        await tx.participation.deleteMany({
+          where: {
+            userId: userId,
+            cycle: {
+              status: { in: ["ACTIVE", "UPCOMING"] },
+            },
+          },
+        });
+
+        // Mark user as deleted
+        await tx.user.update({
+          where: { id: userId },
+          data: {
+            status: "DELETED",
+          },
+        });
+      },
     );
 
-    if (hasActiveParticipations) {
-      return {
-        success: false,
-        error:
-          "Cannot delete user with active participations. Please have them opt-out first.",
-      };
-    }
-
-    // Instead of deleting, mark as suspended with special status
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        status: "DELETED",
-      },
-    });
-
     console.log(
-      `User ${userId} deleted by admin ${adminId}. Reason: ${reason}`
+      `User ${userId} deleted by admin ${adminId}. Reason: ${reason}`,
     );
 
     revalidatePath("/dashboard/admin/users");

@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 
 export async function getDashboardData(userId: string) {
   try {
@@ -27,38 +27,55 @@ export async function getDashboardData(userId: string) {
 
     // Get active participation
     const activeParticipation = user.participations.find(
-      (p) => p.cycle.status === "ACTIVE" && !p.hasOptedOut
+      (p: { cycle: { status: string }; hasOptedOut: any }) =>
+        p.cycle.status === "ACTIVE" && !p.hasOptedOut,
     );
 
     // Calculate statistics
-    const totalContributed = user.participations.reduce((sum, p) => {
-      const paidPayments = p.payments.filter((pay) => pay.status === "PAID");
-      return (
-        sum +
-        paidPayments.reduce((paySum, pay) => paySum + (pay.paidAmount || 0), 0)
-      );
-    }, 0);
+    const totalContributed = user.participations.reduce(
+      (sum: any, p: { payments: any[] }) => {
+        const paidPayments = p.payments.filter(
+          (pay: { status: string }) => pay.status === "PAID",
+        );
+        return (
+          sum +
+          paidPayments.reduce(
+            (paySum: any, pay: { paidAmount: any }) =>
+              paySum + (pay.paidAmount || 0),
+            0,
+          )
+        );
+      },
+      0,
+    );
 
     const pendingPayments = activeParticipation
-      ? activeParticipation.payments.filter((p) => p.status === "PENDING")
-          .length
+      ? activeParticipation.payments.filter(
+          (p: { status: string }) => p.status === "PENDING",
+        ).length
       : 0;
 
     const overduePayments = activeParticipation
-      ? activeParticipation.payments.filter((p) => {
-          return p.status === "PENDING" && new Date() > p.dueDate;
-        }).length
+      ? activeParticipation.payments.filter(
+          (p: { status: string; dueDate: number }) => {
+            return p.status === "PENDING" && new Date().getTime() > p.dueDate;
+          },
+        ).length
       : 0;
 
-    const totalFines = user.participations.reduce((sum, p) => {
-      return (
-        sum +
-        p.payments.reduce(
-          (fineSum, pay) => fineSum + (pay.hasFine ? pay.fineAmount : 0),
-          0
-        )
-      );
-    }, 0);
+    const totalFines = user.participations.reduce(
+      (sum: any, p: { payments: any[] }) => {
+        return (
+          sum +
+          p.payments.reduce(
+            (fineSum: any, pay: { hasFine: any; fineAmount: any }) =>
+              fineSum + (pay.hasFine ? pay.fineAmount : 0),
+            0,
+          )
+        );
+      },
+      0,
+    );
 
     const expectedPayout = activeParticipation
       ? activeParticipation.totalPayout
@@ -94,24 +111,44 @@ export async function getDashboardData(userId: string) {
         expectedPayout,
       },
       recentPayments: activeParticipation
-        ? activeParticipation.payments.slice(0, 5).map((p) => ({
-            id: p.id,
-            monthNumber: p.monthNumber,
-            amount: p.amount,
-            dueDate: p.dueDate,
-            paidAt: p.paidAt,
-            status: p.status,
-            hasFine: p.hasFine,
-            fineAmount: p.fineAmount,
-          }))
+        ? activeParticipation.payments
+            .slice(0, 5)
+            .map(
+              (p: {
+                id: any;
+                monthNumber: any;
+                amount: any;
+                dueDate: any;
+                paidAt: any;
+                status: any;
+                hasFine: any;
+                fineAmount: any;
+              }) => ({
+                id: p.id,
+                monthNumber: p.monthNumber,
+                amount: p.amount,
+                dueDate: p.dueDate,
+                paidAt: p.paidAt,
+                status: p.status,
+                hasFine: p.hasFine,
+                fineAmount: p.fineAmount,
+              }),
+            )
         : [],
-      allParticipations: user.participations.map((p) => ({
-        id: p.id,
-        cycleName: p.cycle.name,
-        status: p.cycle.status,
-        contributionMode: p.contributionMode,
-        hasOptedOut: p.hasOptedOut,
-      })),
+      allParticipations: user.participations.map(
+        (p: {
+          id: any;
+          cycle: { name: any; status: any };
+          contributionMode: any;
+          hasOptedOut: any;
+        }) => ({
+          id: p.id,
+          cycleName: p.cycle.name,
+          status: p.cycle.status,
+          contributionMode: p.contributionMode,
+          hasOptedOut: p.hasOptedOut,
+        }),
+      ),
     };
   } catch (error) {
     console.error("Error getting dashboard data:", error);
@@ -131,15 +168,25 @@ export async function getActiveCycles() {
       orderBy: { startDate: "asc" },
     });
 
-    return cycles.map((c) => ({
-      id: c.id,
-      name: c.name,
-      startDate: c.startDate,
-      endDate: c.endDate,
-      registrationDeadline: c.registrationDeadline,
-      totalSlots: c.totalSlots,
-      status: c.status,
-    }));
+    return cycles.map(
+      (c: {
+        id: any;
+        name: any;
+        startDate: any;
+        endDate: any;
+        registrationDeadline: any;
+        totalSlots: any;
+        status: any;
+      }) => ({
+        id: c.id,
+        name: c.name,
+        startDate: c.startDate,
+        endDate: c.endDate,
+        registrationDeadline: c.registrationDeadline,
+        totalSlots: c.totalSlots,
+        status: c.status,
+      }),
+    );
   } catch (error) {
     console.error("Error getting active cycles:", error);
     return [];

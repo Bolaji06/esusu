@@ -1,7 +1,7 @@
 "use server";
 
-import prisma from "../lib/prisma";
 import { revalidatePath } from "next/cache";
+import { prisma } from "../lib/prisma";
 
 // Check if user is admin
 export async function verifyAdmin(userId: string) {
@@ -58,8 +58,8 @@ export async function getAdminDashboardStats() {
     });
 
     const totalCollected = paidPayments.reduce(
-      (sum, p) => sum + (p.paidAmount || 0),
-      0
+      (sum: any, p: { paidAmount: any }) => sum + (p.paidAmount || 0),
+      0,
     );
 
     const finesCollected = await prisma.payment.aggregate({
@@ -134,20 +134,37 @@ export async function getRecentActivities() {
     });
 
     return {
-      recentPayments: recentPayments.map((p) => ({
-        id: p.id,
-        userName: p.user.fullName,
-        amount: p.paidAmount || p.amount,
-        monthNumber: p.monthNumber,
-        paidAt: p.paidAt,
-      })),
-      recentRegistrations: recentRegistrations.map((r) => ({
-        id: r.id,
-        userName: r.user.fullName,
-        cycleName: r.cycle.name,
-        contributionMode: r.contributionMode,
-        registeredAt: r.registeredAt,
-      })),
+      recentPayments: recentPayments.map(
+        (p: {
+          id: any;
+          user: { fullName: any };
+          paidAmount: any;
+          amount: any;
+          monthNumber: any;
+          paidAt: any;
+        }) => ({
+          id: p.id,
+          userName: p.user.fullName,
+          amount: p.paidAmount || p.amount,
+          monthNumber: p.monthNumber,
+          paidAt: p.paidAt,
+        }),
+      ),
+      recentRegistrations: recentRegistrations.map(
+        (r: {
+          id: any;
+          user: { fullName: any };
+          cycle: { name: any };
+          contributionMode: any;
+          registeredAt: any;
+        }) => ({
+          id: r.id,
+          userName: r.user.fullName,
+          cycleName: r.cycle.name,
+          contributionMode: r.contributionMode,
+          registeredAt: r.registeredAt,
+        }),
+      ),
     };
   } catch (error) {
     console.error("Error getting recent activities:", error);
@@ -186,21 +203,35 @@ export async function getPaymentsNeedingVerification() {
       },
     });
 
-    return payments.map((p) => ({
-      id: p.id,
-      userId: p.userId,
-      userName: p.user.fullName,
-      userPhone: p.user.phone,
-      cycleName: p.participation.cycle.name,
-      contributionMode: p.participation.contributionMode,
-      monthNumber: p.monthNumber,
-      amount: p.amount,
-      dueDate: p.dueDate,
-      proofOfPayment: p.proofOfPayment,
-      hasFine: p.hasFine,
-      fineAmount: p.fineAmount,
-      uploadedAt: p.updatedAt,
-    }));
+    return payments.map(
+      (p: {
+        id: any;
+        userId: any;
+        user: { fullName: any; phone: any };
+        participation: { cycle: { name: any }; contributionMode: any };
+        monthNumber: any;
+        amount: any;
+        dueDate: any;
+        proofOfPayment: any;
+        hasFine: any;
+        fineAmount: any;
+        updatedAt: any;
+      }) => ({
+        id: p.id,
+        userId: p.userId,
+        userName: p.user.fullName,
+        userPhone: p.user.phone,
+        cycleName: p.participation.cycle.name,
+        contributionMode: p.participation.contributionMode,
+        monthNumber: p.monthNumber,
+        amount: p.amount,
+        dueDate: p.dueDate,
+        proofOfPayment: p.proofOfPayment,
+        hasFine: p.hasFine,
+        fineAmount: p.fineAmount,
+        uploadedAt: p.updatedAt,
+      }),
+    );
   } catch (error) {
     console.error("Error getting payments needing verification:", error);
     return [];
@@ -212,7 +243,7 @@ export async function verifyPayment(
   paymentId: string,
   adminId: string,
   approved: boolean,
-  notes?: string
+  notes?: string,
 ) {
   try {
     const isAdmin = await verifyAdmin(adminId);
@@ -251,7 +282,9 @@ export async function verifyPayment(
 
     return {
       success: true,
-      message: approved ? "Payment verified successfully" : "Payment proof rejected",
+      message: approved
+        ? "Payment verified successfully"
+        : "Payment proof rejected",
     };
   } catch (error) {
     console.error("Error verifying payment:", error);
@@ -285,17 +318,29 @@ export async function getAllUsers(page: number = 1, limit: number = 20) {
     ]);
 
     return {
-      users: users.map((u) => ({
-        id: u.id,
-        fullName: u.fullName,
-        phone: u.phone,
-        email: u.email,
-        occupation: u.occupation,
-        status: u.status,
-        isAdmin: u.isAdmin,
-        createdAt: u.createdAt,
-        participationCount: u.participations.length,
-      })),
+      users: users.map(
+        (u: {
+          id: any;
+          fullName: any;
+          phone: any;
+          email: any;
+          occupation: any;
+          status: any;
+          isAdmin: any;
+          createdAt: any;
+          participations: string | any[];
+        }) => ({
+          id: u.id,
+          fullName: u.fullName,
+          phone: u.phone,
+          email: u.email,
+          occupation: u.occupation,
+          status: u.status,
+          isAdmin: u.isAdmin,
+          createdAt: u.createdAt,
+          participationCount: u.participations.length,
+        }),
+      ),
       pagination: {
         page,
         limit,
@@ -324,17 +369,28 @@ export async function getAllCycles() {
       },
     });
 
-    return cycles.map((c) => ({
-      id: c.id,
-      name: c.name,
-      startDate: c.startDate,
-      endDate: c.endDate,
-      registrationDeadline: c.registrationDeadline,
-      status: c.status,
-      totalSlots: c.totalSlots,
-      participantCount: c.participations.length,
-      availableSlots: c.totalSlots - c.participations.length,
-    }));
+    return cycles.map(
+      (c: {
+        id: any;
+        name: any;
+        startDate: any;
+        endDate: any;
+        registrationDeadline: any;
+        status: any;
+        totalSlots: number;
+        participations: string | any[];
+      }) => ({
+        id: c.id,
+        name: c.name,
+        startDate: c.startDate,
+        endDate: c.endDate,
+        registrationDeadline: c.registrationDeadline,
+        status: c.status,
+        totalSlots: c.totalSlots,
+        participantCount: c.participations.length,
+        availableSlots: c.totalSlots - c.participations.length,
+      }),
+    );
   } catch (error) {
     console.error("Error getting all cycles:", error);
     return [];
@@ -345,7 +401,7 @@ export async function getAllCycles() {
 export async function toggleUserStatus(
   userId: string,
   adminId: string,
-  action: "suspend" | "activate"
+  action: "suspend" | "activate",
 ) {
   try {
     const isAdmin = await verifyAdmin(adminId);

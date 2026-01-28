@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 import { CycleStatus } from "@/app/generated/prisma/enums";
 
@@ -59,30 +59,77 @@ export async function getAllCyclesWithDetails() {
       },
     });
 
-    return cycles.map((cycle) => ({
-      id: cycle.id,
-      name: cycle.name,
-      startDate: cycle.startDate,
-      endDate: cycle.endDate,
-      registrationDeadline: cycle.registrationDeadline,
-      numberPickingStartDate: cycle.numberPickingStartDate,
-      status: cycle.status,
-      totalSlots: cycle.totalSlots,
-      paymentDeadlineDay: cycle.paymentDeadlineDay,
-      createdAt: cycle.createdAt,
-      // Stats
-      totalParticipants: cycle.participations.length,
-      activeParticipants: cycle.participations.filter((p) => !p.hasOptedOut).length,
-      pickedNumbers: cycle.participations.filter((p) => p.pickedNumber !== null).length,
-      availableSlots: cycle.totalSlots - cycle.participations.length,
-      // Payment stats
-      totalPayments: cycle.payments.length,
-      paidPayments: cycle.payments.filter((p) => p.status === "PAID").length,
-      pendingPayments: cycle.payments.filter((p) => p.status === "PENDING").length,
-      // Payout stats
-      totalPayouts: cycle.payouts.length,
-      completedPayouts: cycle.payouts.filter((p) => p.status === "PAID").length,
-    }));
+    return cycles.map(
+      (cycle: {
+        id: any;
+        name: any;
+        startDate: any;
+        endDate: any;
+        registrationDeadline: any;
+        numberPickingStartDate: any;
+        status: any;
+        totalSlots: number;
+        paymentDeadlineDay: any;
+        createdAt: any;
+        participations: {
+          length: number;
+          filter: (arg0: { (p: any): boolean; (p: any): boolean }) => {
+            (): any;
+            new (): any;
+            length: any;
+          };
+        };
+        payments: {
+          length: any;
+          filter: (arg0: { (p: any): boolean; (p: any): boolean }) => {
+            (): any;
+            new (): any;
+            length: any;
+          };
+        };
+        payouts: {
+          length: any;
+          filter: (arg0: (p: any) => boolean) => {
+            (): any;
+            new (): any;
+            length: any;
+          };
+        };
+      }) => ({
+        id: cycle.id,
+        name: cycle.name,
+        startDate: cycle.startDate,
+        endDate: cycle.endDate,
+        registrationDeadline: cycle.registrationDeadline,
+        numberPickingStartDate: cycle.numberPickingStartDate,
+        status: cycle.status,
+        totalSlots: cycle.totalSlots,
+        paymentDeadlineDay: cycle.paymentDeadlineDay,
+        createdAt: cycle.createdAt,
+        // Stats
+        totalParticipants: cycle.participations.length,
+        activeParticipants: cycle.participations.filter(
+          (p: { hasOptedOut: any }) => !p.hasOptedOut,
+        ).length,
+        pickedNumbers: cycle.participations.filter(
+          (p: { pickedNumber: null }) => p.pickedNumber !== null,
+        ).length,
+        availableSlots: cycle.totalSlots - cycle.participations.length,
+        // Payment stats
+        totalPayments: cycle.payments.length,
+        paidPayments: cycle.payments.filter(
+          (p: { status: string }) => p.status === "PAID",
+        ).length,
+        pendingPayments: cycle.payments.filter(
+          (p: { status: string }) => p.status === "PENDING",
+        ).length,
+        // Payout stats
+        totalPayouts: cycle.payouts.length,
+        completedPayouts: cycle.payouts.filter(
+          (p: { status: string }) => p.status === "PAID",
+        ).length,
+      }),
+    );
   } catch (error) {
     console.error("Error getting cycles:", error);
     return [];
@@ -123,17 +170,27 @@ export async function getCycleDetails(cycleId: string) {
       totalSlots: cycle.totalSlots,
       paymentDeadlineDay: cycle.paymentDeadlineDay,
       createdAt: cycle.createdAt,
-      participants: cycle.participations.map((p) => ({
-        id: p.id,
-        userName: p.user.fullName,
-        userPhone: p.user.phone,
-        userEmail: p.user.email,
-        contributionMode: p.contributionMode,
-        pickedNumber: p.pickedNumber,
-        hasOptedOut: p.hasOptedOut,
-        registeredAt: p.registeredAt,
-        hasBankDetails: !!p.bankDetails,
-      })),
+      participants: cycle.participations.map(
+        (p: {
+          id: any;
+          user: { fullName: any; phone: any; email: any };
+          contributionMode: any;
+          pickedNumber: any;
+          hasOptedOut: any;
+          registeredAt: any;
+          bankDetails: any;
+        }) => ({
+          id: p.id,
+          userName: p.user.fullName,
+          userPhone: p.user.phone,
+          userEmail: p.user.email,
+          contributionMode: p.contributionMode,
+          pickedNumber: p.pickedNumber,
+          hasOptedOut: p.hasOptedOut,
+          registeredAt: p.registeredAt,
+          hasBankDetails: !!p.bankDetails,
+        }),
+      ),
     };
   } catch (error) {
     console.error("Error getting cycle details:", error);
@@ -142,7 +199,10 @@ export async function getCycleDetails(cycleId: string) {
 }
 
 // Create new cycle
-export async function createCycle(prevState: ActionState | null, formData: FormData): Promise<ActionState> {
+export async function createCycle(
+  prevState: ActionState | null,
+  formData: FormData,
+): Promise<ActionState> {
   const adminId = formData.get("adminId") as string;
 
   // Verify admin
@@ -157,13 +217,17 @@ export async function createCycle(prevState: ActionState | null, formData: FormD
   const name = formData.get("name") as string;
   const startDate = new Date(formData.get("startDate") as string);
   const endDate = new Date(formData.get("endDate") as string);
-  const registrationDeadline = new Date(formData.get("registrationDeadline") as string);
+  const registrationDeadline = new Date(
+    formData.get("registrationDeadline") as string,
+  );
   const numberPickingStartDate = formData.get("numberPickingStartDate")
     ? new Date(formData.get("numberPickingStartDate") as string)
     : null;
   const status = formData.get("status") as CycleStatus;
   const totalSlots = parseInt(formData.get("totalSlots") as string);
-  const paymentDeadlineDay = parseInt(formData.get("paymentDeadlineDay") as string);
+  const paymentDeadlineDay = parseInt(
+    formData.get("paymentDeadlineDay") as string,
+  );
 
   // Validation
   if (!name?.trim()) {
@@ -175,7 +239,10 @@ export async function createCycle(prevState: ActionState | null, formData: FormD
   }
 
   if (registrationDeadline >= startDate) {
-    return { success: false, error: "Registration deadline must be before start date" };
+    return {
+      success: false,
+      error: "Registration deadline must be before start date",
+    };
   }
 
   if (totalSlots < 10 || totalSlots > 100) {
@@ -183,7 +250,10 @@ export async function createCycle(prevState: ActionState | null, formData: FormD
   }
 
   if (paymentDeadlineDay < 1 || paymentDeadlineDay > 31) {
-    return { success: false, error: "Payment deadline day must be between 1 and 31" };
+    return {
+      success: false,
+      error: "Payment deadline day must be between 1 and 31",
+    };
   }
 
   try {
@@ -217,7 +287,11 @@ export async function createCycle(prevState: ActionState | null, formData: FormD
 }
 
 // Update cycle
-export async function updateCycle(cycleId: string, adminId: string, data: CycleUpdateData): Promise<ActionState> {
+export async function updateCycle(
+  cycleId: string,
+  adminId: string,
+  data: CycleUpdateData,
+): Promise<ActionState> {
   try {
     // Verify admin
     const isAdmin = await verifyAdmin(adminId);
@@ -249,9 +323,9 @@ export async function updateCycle(cycleId: string, adminId: string, data: CycleU
     if (data.totalSlots && data.totalSlots < existingCycle.totalSlots) {
       const maxPickedNumber = Math.max(
         ...existingCycle.participations
-          .filter((p) => p.pickedNumber !== null)
-          .map((p) => p.pickedNumber as number),
-        0
+          .filter((p: { pickedNumber: null }) => p.pickedNumber !== null)
+          .map((p: { pickedNumber: number }) => p.pickedNumber as number),
+        0,
       );
 
       if (data.totalSlots < maxPickedNumber) {
@@ -297,7 +371,10 @@ export async function updateCycle(cycleId: string, adminId: string, data: CycleU
 }
 
 // Generate monthly payments for a cycle
-export async function generateCyclePayments(cycleId: string, adminId: string): Promise<ActionState> {
+export async function generateCyclePayments(
+  cycleId: string,
+  adminId: string,
+): Promise<ActionState> {
   try {
     // Verify admin
     const isAdmin = await verifyAdmin(adminId);
@@ -380,7 +457,10 @@ export async function generateCyclePayments(cycleId: string, adminId: string): P
 }
 
 // Close cycle
-export async function closeCycle(cycleId: string, adminId: string): Promise<ActionState> {
+export async function closeCycle(
+  cycleId: string,
+  adminId: string,
+): Promise<ActionState> {
   try {
     // Verify admin
     const isAdmin = await verifyAdmin(adminId);
@@ -431,7 +511,10 @@ export async function closeCycle(cycleId: string, adminId: string): Promise<Acti
 }
 
 // Delete cycle (only if no participants)
-export async function deleteCycle(cycleId: string, adminId: string): Promise<ActionState> {
+export async function deleteCycle(
+  cycleId: string,
+  adminId: string,
+): Promise<ActionState> {
   try {
     // Verify admin
     const isAdmin = await verifyAdmin(adminId);
