@@ -1,8 +1,9 @@
 "use server";
 
+import { ContributionMode } from "@/generated/prisma/enums";
 import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
-import { ContributionMode } from "@/app/generated/prisma/enums";
+//import { ContributionMode } from "@/app/generated/prisma/enums";
 
 export async function getCycleDetails(cycleId: string) {
   try {
