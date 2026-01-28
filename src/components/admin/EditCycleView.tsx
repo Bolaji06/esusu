@@ -7,7 +7,7 @@ import { updateCycle } from "@/src/actions/cycles";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
-import { CycleStatus } from "@/app/generated/prisma/enums";
+import { CycleStatus } from "@/generated/prisma/enums";
 
 interface Cycle {
   id: string;
