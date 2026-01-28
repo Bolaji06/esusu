@@ -1,10 +1,6 @@
-
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/src/actions/auth";
-import {
-  getPendingOptOutRequests,
-  getOptOutStats,
-} from "@/src/actions/optOut";
+import { getPendingOptOutRequests, getOptOutStats } from "@/src/actions/optOut";
 import AdminOptOutView from "@/src/components/admin/AdminOptOutView";
 
 export default async function AdminOptOutsPage() {
@@ -25,8 +21,8 @@ export default async function AdminOptOutsPage() {
 
   return (
     <AdminOptOutView
-      pendingRequests={pendingRequests}
-      stats={stats}
+      pendingRequests={pendingRequests as any}
+      stats={stats as any}
       adminId={user.id}
     />
   );

@@ -56,11 +56,12 @@ export async function getDashboardData(userId: string) {
       : 0;
 
     const overduePayments = activeParticipation
-      ? activeParticipation.payments.filter(
-          (p: { status: string; dueDate: number }) => {
-            return p.status === "PENDING" && new Date().getTime() > p.dueDate;
-          },
-        ).length
+      ? activeParticipation.payments.filter((p: any) => {
+          return (
+            p.status === "PENDING" &&
+            new Date().getTime() > new Date(p.dueDate).getTime()
+          );
+        }).length
       : 0;
 
     const totalFines = user.participations.reduce(

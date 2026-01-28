@@ -42,49 +42,30 @@ export async function getAllPayouts(
       },
     });
 
-    return payouts.map(
-      (p: {
-        id: any;
-        userId: any;
-        user: { fullName: any; phone: any; email: any };
-        participation: {
-          cycle: { name: any };
-          contributionMode: any;
-          bankDetails: { bankName: any; accountNumber: any; accountName: any };
-        };
-        amount: any;
-        scheduledMonth: any;
-        scheduledDate: any;
-        paidAt: any;
-        status: any;
-        transferReference: any;
-        processedBy: any;
-        notes: any;
-      }) => ({
-        id: p.id,
-        userId: p.userId,
-        userName: p.user.fullName,
-        userPhone: p.user.phone,
-        userEmail: p.user.email,
-        cycleName: p.participation.cycle.name,
-        contributionMode: p.participation.contributionMode,
-        amount: p.amount,
-        scheduledMonth: p.scheduledMonth,
-        scheduledDate: p.scheduledDate,
-        paidAt: p.paidAt,
-        status: p.status,
-        transferReference: p.transferReference,
-        processedBy: p.processedBy,
-        notes: p.notes,
-        bankDetails: p.participation.bankDetails
-          ? {
-              bankName: p.participation.bankDetails.bankName,
-              accountNumber: p.participation.bankDetails.accountNumber,
-              accountName: p.participation.bankDetails.accountName,
-            }
-          : null,
-      }),
-    );
+    return payouts.map((p: any) => ({
+      id: p.id,
+      userId: p.userId,
+      userName: p.user.fullName,
+      userPhone: p.user.phone,
+      userEmail: p.user.email,
+      cycleName: p.participation.cycle.name,
+      contributionMode: p.participation.contributionMode,
+      amount: p.amount,
+      scheduledMonth: p.scheduledMonth,
+      scheduledDate: p.scheduledDate,
+      paidAt: p.paidAt,
+      status: p.status,
+      transferReference: p.transferReference,
+      processedBy: p.processedBy,
+      notes: p.notes,
+      bankDetails: p.participation.bankDetails
+        ? {
+            bankName: p.participation.bankDetails.bankName,
+            accountNumber: p.participation.bankDetails.accountNumber,
+            accountName: p.participation.bankDetails.accountName,
+          }
+        : null,
+    }));
   } catch (error) {
     console.error("Error getting all payouts:", error);
     return [];

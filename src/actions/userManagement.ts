@@ -59,64 +59,42 @@ export async function getAllUsersWithDetails(
     ]);
 
     return {
-      users: users.map(
-        (u: {
-          participations: {
-            reduce: (arg0: (sum: any, p: any) => any, arg1: number) => any;
-            length: any;
-            filter: (arg0: (p: any) => boolean) => {
-              (): any;
-              new (): any;
-              length: any;
-            };
-          };
-          payments: string | any[];
-          id: any;
-          fullName: any;
-          phone: any;
-          email: any;
-          occupation: any;
-          address: any;
-          isAdmin: any;
-          status: any;
-          createdAt: any;
-        }) => {
-          const totalContributed = u.participations.reduce(
-            (sum: any, p: { payments: any[] }) => {
-              return (
-                sum +
-                p.payments.reduce(
-                  (pSum: any, pay: { paidAmount: any }) =>
-                    pSum + (pay.paidAmount || 0),
-                  0,
-                )
-              );
-            },
-            0,
-          );
+      users: users.map((u: any) => {
+        const totalContributed = u.participations.reduce(
+          (sum: any, p: { payments: any[] }) => {
+            return (
+              sum +
+              p.payments.reduce(
+                (pSum: any, pay: { paidAmount: any }) =>
+                  pSum + (pay.paidAmount || 0),
+                0,
+              )
+            );
+          },
+          0,
+        );
 
-          const overduePayments = u.payments.length;
+        const overduePayments = u.payments.length;
 
-          return {
-            id: u.id,
-            fullName: u.fullName,
-            phone: u.phone,
-            email: u.email,
-            occupation: u.occupation,
-            address: u.address,
-            isAdmin: u.isAdmin,
-            status: u.status,
-            createdAt: u.createdAt,
-            participationCount: u.participations.length,
-            activeParticipations: u.participations.filter(
-              (p: { cycle: { status: string }; hasOptedOut: any }) =>
-                p.cycle.status === "ACTIVE" && !p.hasOptedOut,
-            ).length,
-            totalContributed,
-            overduePayments,
-          };
-        },
-      ),
+        return {
+          id: u.id,
+          fullName: u.fullName,
+          phone: u.phone,
+          email: u.email,
+          occupation: u.occupation,
+          address: u.address,
+          isAdmin: u.isAdmin,
+          status: u.status,
+          createdAt: u.createdAt,
+          participationCount: u.participations.length,
+          activeParticipations: u.participations.filter(
+            (p: { cycle: { status: string }; hasOptedOut: any }) =>
+              p.cycle.status === "ACTIVE" && !p.hasOptedOut,
+          ).length,
+          totalContributed,
+          overduePayments,
+        };
+      }),
       pagination: {
         page,
         limit,
@@ -227,51 +205,28 @@ export async function getUserDetails(userId: string) {
             p.cycle.status === "ACTIVE" && !p.hasOptedOut,
         ).length,
       },
-      participations: user.participations.map(
-        (p: {
-          id: any;
-          cycle: { name: any; status: any };
-          contributionMode: any;
-          pickedNumber: any;
-          monthlyAmount: any;
-          totalPayout: any;
-          hasOptedOut: any;
-          registeredAt: any;
-          bankDetails: any;
-          payments: {
-            filter: (arg0: (pay: any) => boolean) => {
-              (): any;
-              new (): any;
-              length: any;
-            };
-            length: any;
-          };
-          payout: any;
-        }) => ({
-          id: p.id,
-          cycleName: p.cycle.name,
-          cycleStatus: p.cycle.status,
-          contributionMode: p.contributionMode,
-          pickedNumber: p.pickedNumber,
-          monthlyAmount: p.monthlyAmount,
-          totalPayout: p.totalPayout,
-          hasOptedOut: p.hasOptedOut,
-          registeredAt: p.registeredAt,
-          bankDetails: p.bankDetails,
-          paidPayments: p.payments.filter(
-            (pay: { status: string }) => pay.status === "PAID",
-          ).length,
-          totalPayments: p.payments.length,
-          payout: p.payout,
-        }),
-      ),
+      participations: user.participations.map((p: any) => ({
+        id: p.id,
+        cycleName: p.cycle.name,
+        cycleStatus: p.cycle.status,
+        contributionMode: p.contributionMode,
+        pickedNumber: p.pickedNumber,
+        monthlyAmount: p.monthlyAmount,
+        totalPayout: p.totalPayout,
+        hasOptedOut: p.hasOptedOut,
+        registeredAt: p.registeredAt,
+        bankDetails: p.bankDetails,
+        paidPayments: p.payments.filter(
+          (pay: { status: string }) => pay.status === "PAID",
+        ).length,
+        totalPayments: p.payments.length,
+        payout: p.payout,
+      })),
       recentPayments: user.payments
         .filter((p: { status: string }) => p.status === "PAID")
         .sort(
-          (
-            a: { paidAt: { getTime: () => any } },
-            b: { paidAt: { getTime: () => any } },
-          ) => (b.paidAt?.getTime() || 0) - (a.paidAt?.getTime() || 0),
+          (a: any, b: any) =>
+            (b.paidAt?.getTime() || 0) - (a.paidAt?.getTime() || 0),
         )
         .slice(0, 5),
       optOutRequests: user.optOutRequests,
@@ -628,40 +583,26 @@ export async function deleteUser(
     }
 
     // Free up spots in active/upcoming cycles and soft delete user
-    await prisma.$transaction(
-      async (tx: {
-        participation: {
-          deleteMany: (arg0: {
-            where: { userId: string; cycle: { status: { in: string[] } } };
-          }) => any;
-        };
-        user: {
-          update: (arg0: {
-            where: { id: string };
-            data: { status: string };
-          }) => any;
-        };
-      }) => {
-        // Delete participations in active/upcoming cycles
-        // This frees up the spot and the picked number
-        await tx.participation.deleteMany({
-          where: {
-            userId: userId,
-            cycle: {
-              status: { in: ["ACTIVE", "UPCOMING"] },
-            },
+    await prisma.$transaction(async (tx: any) => {
+      // Delete participations in active/upcoming cycles
+      // This frees up the spot and the picked number
+      await tx.participation.deleteMany({
+        where: {
+          userId: userId,
+          cycle: {
+            status: { in: ["ACTIVE", "UPCOMING"] },
           },
-        });
+        },
+      });
 
-        // Mark user as deleted
-        await tx.user.update({
-          where: { id: userId },
-          data: {
-            status: "DELETED",
-          },
-        });
-      },
-    );
+      // Mark user as deleted
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          status: "DELETED",
+        },
+      });
+    });
 
     console.log(
       `User ${userId} deleted by admin ${adminId}. Reason: ${reason}`,

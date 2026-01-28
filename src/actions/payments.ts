@@ -56,11 +56,12 @@ export async function getUserPayments(userId: string) {
     const pendingCount = participation.payments.filter(
       (p: { status: string }) => p.status === "PENDING",
     ).length;
-    const overdueCount = participation.payments.filter(
-      (p: { status: string; dueDate: number }) => {
-        return p.status === "PENDING" && new Date().getTime() > p.dueDate;
-      },
-    ).length;
+    const overdueCount = participation.payments.filter((p: any) => {
+      return (
+        p.status === "PENDING" &&
+        new Date().getTime() > new Date(p.dueDate).getTime()
+      );
+    }).length;
 
     return {
       participation: {

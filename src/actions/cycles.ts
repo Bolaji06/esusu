@@ -59,77 +59,40 @@ export async function getAllCyclesWithDetails() {
       },
     });
 
-    return cycles.map(
-      (cycle: {
-        id: any;
-        name: any;
-        startDate: any;
-        endDate: any;
-        registrationDeadline: any;
-        numberPickingStartDate: any;
-        status: any;
-        totalSlots: number;
-        paymentDeadlineDay: any;
-        createdAt: any;
-        participations: {
-          length: number;
-          filter: (arg0: { (p: any): boolean; (p: any): boolean }) => {
-            (): any;
-            new (): any;
-            length: any;
-          };
-        };
-        payments: {
-          length: any;
-          filter: (arg0: { (p: any): boolean; (p: any): boolean }) => {
-            (): any;
-            new (): any;
-            length: any;
-          };
-        };
-        payouts: {
-          length: any;
-          filter: (arg0: (p: any) => boolean) => {
-            (): any;
-            new (): any;
-            length: any;
-          };
-        };
-      }) => ({
-        id: cycle.id,
-        name: cycle.name,
-        startDate: cycle.startDate,
-        endDate: cycle.endDate,
-        registrationDeadline: cycle.registrationDeadline,
-        numberPickingStartDate: cycle.numberPickingStartDate,
-        status: cycle.status,
-        totalSlots: cycle.totalSlots,
-        paymentDeadlineDay: cycle.paymentDeadlineDay,
-        createdAt: cycle.createdAt,
-        // Stats
-        totalParticipants: cycle.participations.length,
-        activeParticipants: cycle.participations.filter(
-          (p: { hasOptedOut: any }) => !p.hasOptedOut,
-        ).length,
-        pickedNumbers: cycle.participations.filter(
-          (p: { pickedNumber: null }) => p.pickedNumber !== null,
-        ).length,
-        availableSlots: cycle.totalSlots - cycle.participations.length,
-        // Payment stats
-        totalPayments: cycle.payments.length,
-        paidPayments: cycle.payments.filter(
-          (p: { status: string }) => p.status === "PAID",
-        ).length,
-        pendingPayments: cycle.payments.filter(
-          (p: { status: string }) => p.status === "PENDING",
-        ).length,
-        // Payout stats
-        totalPayouts: cycle.payouts.length,
-        completedPayouts: cycle.payouts.filter(
-          (p: { status: string }) => p.status === "PAID",
-        ).length,
-      }),
-    );
+    return cycles.map((cycle: any) => ({
+      id: cycle.id,
+      name: cycle.name,
+      startDate: cycle.startDate,
+      endDate: cycle.endDate,
+      registrationDeadline: cycle.registrationDeadline,
+      numberPickingStartDate: cycle.numberPickingStartDate,
+      status: cycle.status,
+      totalSlots: cycle.totalSlots,
+      paymentDeadlineDay: cycle.paymentDeadlineDay,
+      createdAt: cycle.createdAt,
+      // Stats
+      totalParticipants: cycle.participations.length,
+      activeParticipants: cycle.participations.filter(
+        (p: { hasOptedOut: any }) => !p.hasOptedOut,
+      ).length,
+      pickedNumbers: cycle.participations.filter(
+        (p: any) => p.pickedNumber !== null,
+      ).length,
+      availableSlots: cycle.totalSlots - cycle.participations.length,
+      // Payment stats
+      totalPayments: cycle.payments.length,
+      paidPayments: cycle.payments.filter(
+        (p: { status: string }) => p.status === "PAID",
+      ).length,
+      pendingPayments: cycle.payments.filter(
+        (p: { status: string }) => p.status === "PENDING",
+      ).length,
+      // Payout stats
+      totalPayouts: cycle.payouts.length,
+      completedPayouts: cycle.payouts.filter(
+        (p: { status: string }) => p.status === "PAID",
+      ).length,
+    }));
   } catch (error) {
     console.error("Error getting cycles:", error);
     return [];
@@ -323,8 +286,8 @@ export async function updateCycle(
     if (data.totalSlots && data.totalSlots < existingCycle.totalSlots) {
       const maxPickedNumber = Math.max(
         ...existingCycle.participations
-          .filter((p: { pickedNumber: null }) => p.pickedNumber !== null)
-          .map((p: { pickedNumber: number }) => p.pickedNumber as number),
+          .filter((p: any) => p.pickedNumber !== null)
+          .map((p: any) => p.pickedNumber as number),
         0,
       );
 
