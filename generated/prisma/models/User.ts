@@ -28,13 +28,13 @@ export type UserMinAggregateOutputType = {
   id: string | null
   fullName: string | null
   phone: string | null
-  email: string | null
-  password: string | null
-  occupation: string | null
-  address: string | null
   isAdmin: boolean | null
-  status: $Enums.UserStatus | null
   createdAt: Date | null
+  address: string | null
+  email: string | null
+  occupation: string | null
+  password: string | null
+  status: $Enums.UserStatus | null
   updatedAt: Date | null
 }
 
@@ -42,13 +42,13 @@ export type UserMaxAggregateOutputType = {
   id: string | null
   fullName: string | null
   phone: string | null
-  email: string | null
-  password: string | null
-  occupation: string | null
-  address: string | null
   isAdmin: boolean | null
-  status: $Enums.UserStatus | null
   createdAt: Date | null
+  address: string | null
+  email: string | null
+  occupation: string | null
+  password: string | null
+  status: $Enums.UserStatus | null
   updatedAt: Date | null
 }
 
@@ -56,13 +56,13 @@ export type UserCountAggregateOutputType = {
   id: number
   fullName: number
   phone: number
-  email: number
-  password: number
-  occupation: number
-  address: number
   isAdmin: number
-  status: number
   createdAt: number
+  address: number
+  email: number
+  occupation: number
+  password: number
+  status: number
   updatedAt: number
   _all: number
 }
@@ -72,13 +72,13 @@ export type UserMinAggregateInputType = {
   id?: true
   fullName?: true
   phone?: true
-  email?: true
-  password?: true
-  occupation?: true
-  address?: true
   isAdmin?: true
-  status?: true
   createdAt?: true
+  address?: true
+  email?: true
+  occupation?: true
+  password?: true
+  status?: true
   updatedAt?: true
 }
 
@@ -86,13 +86,13 @@ export type UserMaxAggregateInputType = {
   id?: true
   fullName?: true
   phone?: true
-  email?: true
-  password?: true
-  occupation?: true
-  address?: true
   isAdmin?: true
-  status?: true
   createdAt?: true
+  address?: true
+  email?: true
+  occupation?: true
+  password?: true
+  status?: true
   updatedAt?: true
 }
 
@@ -100,13 +100,13 @@ export type UserCountAggregateInputType = {
   id?: true
   fullName?: true
   phone?: true
-  email?: true
-  password?: true
-  occupation?: true
-  address?: true
   isAdmin?: true
-  status?: true
   createdAt?: true
+  address?: true
+  email?: true
+  occupation?: true
+  password?: true
+  status?: true
   updatedAt?: true
   _all?: true
 }
@@ -187,13 +187,13 @@ export type UserGroupByOutputType = {
   id: string
   fullName: string
   phone: string
-  email: string | null
-  password: string
-  occupation: string | null
-  address: string | null
   isAdmin: boolean
-  status: $Enums.UserStatus
   createdAt: Date
+  address: string | null
+  email: string | null
+  occupation: string | null
+  password: string
+  status: $Enums.UserStatus
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
@@ -222,38 +222,38 @@ export type UserWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   fullName?: Prisma.StringFilter<"User"> | string
   phone?: Prisma.StringFilter<"User"> | string
-  email?: Prisma.StringNullableFilter<"User"> | string | null
-  password?: Prisma.StringFilter<"User"> | string
-  occupation?: Prisma.StringNullableFilter<"User"> | string | null
-  address?: Prisma.StringNullableFilter<"User"> | string | null
   isAdmin?: Prisma.BoolFilter<"User"> | boolean
-  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  address?: Prisma.StringNullableFilter<"User"> | string | null
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  occupation?: Prisma.StringNullableFilter<"User"> | string | null
+  password?: Prisma.StringFilter<"User"> | string
+  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  pick?: Prisma.XOR<Prisma.NumberPickNullableScalarRelationFilter, Prisma.NumberPickWhereInput> | null
+  optOutRequests?: Prisma.OptOutRequestListRelationFilter
   participations?: Prisma.ParticipationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   payouts?: Prisma.PayoutListRelationFilter
-  optOutRequests?: Prisma.OptOutRequestListRelationFilter
-  pick?: Prisma.XOR<Prisma.NumberPickNullableScalarRelationFilter, Prisma.NumberPickWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  email?: Prisma.SortOrderInput | Prisma.SortOrder
-  password?: Prisma.SortOrder
-  occupation?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrderInput | Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  occupation?: Prisma.SortOrderInput | Prisma.SortOrder
+  password?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  pick?: Prisma.NumberPickOrderByWithRelationInput
+  optOutRequests?: Prisma.OptOutRequestOrderByRelationAggregateInput
   participations?: Prisma.ParticipationOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   payouts?: Prisma.PayoutOrderByRelationAggregateInput
-  optOutRequests?: Prisma.OptOutRequestOrderByRelationAggregateInput
-  pick?: Prisma.NumberPickOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -263,32 +263,32 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   fullName?: Prisma.StringFilter<"User"> | string
-  email?: Prisma.StringNullableFilter<"User"> | string | null
-  password?: Prisma.StringFilter<"User"> | string
-  occupation?: Prisma.StringNullableFilter<"User"> | string | null
-  address?: Prisma.StringNullableFilter<"User"> | string | null
   isAdmin?: Prisma.BoolFilter<"User"> | boolean
-  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  address?: Prisma.StringNullableFilter<"User"> | string | null
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  occupation?: Prisma.StringNullableFilter<"User"> | string | null
+  password?: Prisma.StringFilter<"User"> | string
+  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  pick?: Prisma.XOR<Prisma.NumberPickNullableScalarRelationFilter, Prisma.NumberPickWhereInput> | null
+  optOutRequests?: Prisma.OptOutRequestListRelationFilter
   participations?: Prisma.ParticipationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   payouts?: Prisma.PayoutListRelationFilter
-  optOutRequests?: Prisma.OptOutRequestListRelationFilter
-  pick?: Prisma.XOR<Prisma.NumberPickNullableScalarRelationFilter, Prisma.NumberPickWhereInput> | null
 }, "id" | "phone">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  email?: Prisma.SortOrderInput | Prisma.SortOrder
-  password?: Prisma.SortOrder
-  occupation?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrderInput | Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  occupation?: Prisma.SortOrderInput | Prisma.SortOrder
+  password?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -302,13 +302,13 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   fullName?: Prisma.StringWithAggregatesFilter<"User"> | string
   phone?: Prisma.StringWithAggregatesFilter<"User"> | string
-  email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  password?: Prisma.StringWithAggregatesFilter<"User"> | string
-  occupation?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  address?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   isAdmin?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  address?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  occupation?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  password?: Prisma.StringWithAggregatesFilter<"User"> | string
+  status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
@@ -316,89 +316,89 @@ export type UserCreateInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
+  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
+  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
+  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
+  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
 }
 
@@ -406,13 +406,13 @@ export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -420,13 +420,13 @@ export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -434,13 +434,13 @@ export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
-  occupation?: Prisma.SortOrder
-  address?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  occupation?: Prisma.SortOrder
+  password?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -448,13 +448,13 @@ export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
-  occupation?: Prisma.SortOrder
-  address?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  occupation?: Prisma.SortOrder
+  password?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -462,13 +462,13 @@ export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
-  email?: Prisma.SortOrder
-  password?: Prisma.SortOrder
-  occupation?: Prisma.SortOrder
-  address?: Prisma.SortOrder
   isAdmin?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  occupation?: Prisma.SortOrder
+  password?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -481,20 +481,20 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type EnumUserStatusFieldUpdateOperationsInput = {
-  set?: $Enums.UserStatus
-}
-
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type EnumUserStatusFieldUpdateOperationsInput = {
+  set?: $Enums.UserStatus
 }
 
 export type UserCreateNestedOneWithoutParticipationsInput = {
@@ -571,36 +571,36 @@ export type UserCreateWithoutParticipationsInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
+  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutParticipationsInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
+  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutParticipationsInput = {
@@ -623,72 +623,72 @@ export type UserUpdateWithoutParticipationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
+  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutParticipationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
+  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
+  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
+  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -711,72 +711,72 @@ export type UserUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
+  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
+  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPayoutsInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
+  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPayoutsInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
+  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPayoutsInput = {
@@ -799,72 +799,72 @@ export type UserUpdateWithoutPayoutsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
+  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPayoutsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
+  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOptOutRequestsInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOptOutRequestsInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutUserInput
-  pick?: Prisma.NumberPickUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOptOutRequestsInput = {
@@ -887,72 +887,72 @@ export type UserUpdateWithoutOptOutRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOptOutRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutUserNestedInput
-  pick?: Prisma.NumberPickUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPickInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPickInput = {
   id?: string
   fullName: string
   phone: string
-  email?: string | null
-  password: string
-  occupation?: string | null
-  address?: string | null
   isAdmin?: boolean
-  status?: $Enums.UserStatus
   createdAt?: Date | string
+  address?: string | null
+  email?: string | null
+  occupation?: string | null
+  password: string
+  status?: $Enums.UserStatus
   updatedAt?: Date | string
+  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutUserInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutUserInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPickInput = {
@@ -975,36 +975,36 @@ export type UserUpdateWithoutPickInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPickInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.StringFieldUpdateOperationsInput | string
-  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutUserNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutUserNestedInput
-  optOutRequests?: Prisma.OptOutRequestUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1013,17 +1013,17 @@ export type UserUncheckedUpdateWithoutPickInput = {
  */
 
 export type UserCountOutputType = {
+  optOutRequests: number
   participations: number
   payments: number
   payouts: number
-  optOutRequests: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  optOutRequests?: boolean | UserCountOutputTypeCountOptOutRequestsArgs
   participations?: boolean | UserCountOutputTypeCountParticipationsArgs
   payments?: boolean | UserCountOutputTypeCountPaymentsArgs
   payouts?: boolean | UserCountOutputTypeCountPayoutsArgs
-  optOutRequests?: boolean | UserCountOutputTypeCountOptOutRequestsArgs
 }
 
 /**
@@ -1034,6 +1034,13 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UserCountOutputType
    */
   select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOptOutRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OptOutRequestWhereInput
 }
 
 /**
@@ -1057,31 +1064,24 @@ export type UserCountOutputTypeCountPayoutsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.PayoutWhereInput
 }
 
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountOptOutRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.OptOutRequestWhereInput
-}
-
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   fullName?: boolean
   phone?: boolean
-  email?: boolean
-  password?: boolean
-  occupation?: boolean
-  address?: boolean
   isAdmin?: boolean
-  status?: boolean
   createdAt?: boolean
+  address?: boolean
+  email?: boolean
+  occupation?: boolean
+  password?: boolean
+  status?: boolean
   updatedAt?: boolean
+  pick?: boolean | Prisma.User$pickArgs<ExtArgs>
+  optOutRequests?: boolean | Prisma.User$optOutRequestsArgs<ExtArgs>
   participations?: boolean | Prisma.User$participationsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   payouts?: boolean | Prisma.User$payoutsArgs<ExtArgs>
-  optOutRequests?: boolean | Prisma.User$optOutRequestsArgs<ExtArgs>
-  pick?: boolean | Prisma.User$pickArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1089,13 +1089,13 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   fullName?: boolean
   phone?: boolean
-  email?: boolean
-  password?: boolean
-  occupation?: boolean
-  address?: boolean
   isAdmin?: boolean
-  status?: boolean
   createdAt?: boolean
+  address?: boolean
+  email?: boolean
+  occupation?: boolean
+  password?: boolean
+  status?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -1103,13 +1103,13 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   fullName?: boolean
   phone?: boolean
-  email?: boolean
-  password?: boolean
-  occupation?: boolean
-  address?: boolean
   isAdmin?: boolean
-  status?: boolean
   createdAt?: boolean
+  address?: boolean
+  email?: boolean
+  occupation?: boolean
+  password?: boolean
+  status?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -1117,23 +1117,23 @@ export type UserSelectScalar = {
   id?: boolean
   fullName?: boolean
   phone?: boolean
-  email?: boolean
-  password?: boolean
-  occupation?: boolean
-  address?: boolean
   isAdmin?: boolean
-  status?: boolean
   createdAt?: boolean
+  address?: boolean
+  email?: boolean
+  occupation?: boolean
+  password?: boolean
+  status?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "phone" | "email" | "password" | "occupation" | "address" | "isAdmin" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "phone" | "isAdmin" | "createdAt" | "address" | "email" | "occupation" | "password" | "status" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  pick?: boolean | Prisma.User$pickArgs<ExtArgs>
+  optOutRequests?: boolean | Prisma.User$optOutRequestsArgs<ExtArgs>
   participations?: boolean | Prisma.User$participationsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   payouts?: boolean | Prisma.User$payoutsArgs<ExtArgs>
-  optOutRequests?: boolean | Prisma.User$optOutRequestsArgs<ExtArgs>
-  pick?: boolean | Prisma.User$pickArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1142,23 +1142,23 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    pick: Prisma.$NumberPickPayload<ExtArgs> | null
+    optOutRequests: Prisma.$OptOutRequestPayload<ExtArgs>[]
     participations: Prisma.$ParticipationPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     payouts: Prisma.$PayoutPayload<ExtArgs>[]
-    optOutRequests: Prisma.$OptOutRequestPayload<ExtArgs>[]
-    pick: Prisma.$NumberPickPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     fullName: string
     phone: string
-    email: string | null
-    password: string
-    occupation: string | null
-    address: string | null
     isAdmin: boolean
-    status: $Enums.UserStatus
     createdAt: Date
+    address: string | null
+    email: string | null
+    occupation: string | null
+    password: string
+    status: $Enums.UserStatus
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -1554,11 +1554,11 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  pick<T extends Prisma.User$pickArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pickArgs<ExtArgs>>): Prisma.Prisma__NumberPickClient<runtime.Types.Result.GetResult<Prisma.$NumberPickPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  optOutRequests<T extends Prisma.User$optOutRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$optOutRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OptOutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   participations<T extends Prisma.User$participationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$participationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payouts<T extends Prisma.User$payoutsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$payoutsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  optOutRequests<T extends Prisma.User$optOutRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$optOutRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OptOutRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  pick<T extends Prisma.User$pickArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pickArgs<ExtArgs>>): Prisma.Prisma__NumberPickClient<runtime.Types.Result.GetResult<Prisma.$NumberPickPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1591,13 +1591,13 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly fullName: Prisma.FieldRef<"User", 'String'>
   readonly phone: Prisma.FieldRef<"User", 'String'>
-  readonly email: Prisma.FieldRef<"User", 'String'>
-  readonly password: Prisma.FieldRef<"User", 'String'>
-  readonly occupation: Prisma.FieldRef<"User", 'String'>
-  readonly address: Prisma.FieldRef<"User", 'String'>
   readonly isAdmin: Prisma.FieldRef<"User", 'Boolean'>
-  readonly status: Prisma.FieldRef<"User", 'UserStatus'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly address: Prisma.FieldRef<"User", 'String'>
+  readonly email: Prisma.FieldRef<"User", 'String'>
+  readonly occupation: Prisma.FieldRef<"User", 'String'>
+  readonly password: Prisma.FieldRef<"User", 'String'>
+  readonly status: Prisma.FieldRef<"User", 'UserStatus'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
@@ -1987,6 +1987,49 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * User.pick
+ */
+export type User$pickArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NumberPick
+   */
+  select?: Prisma.NumberPickSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NumberPick
+   */
+  omit?: Prisma.NumberPickOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NumberPickInclude<ExtArgs> | null
+  where?: Prisma.NumberPickWhereInput
+}
+
+/**
+ * User.optOutRequests
+ */
+export type User$optOutRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OptOutRequest
+   */
+  select?: Prisma.OptOutRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OptOutRequest
+   */
+  omit?: Prisma.OptOutRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OptOutRequestInclude<ExtArgs> | null
+  where?: Prisma.OptOutRequestWhereInput
+  orderBy?: Prisma.OptOutRequestOrderByWithRelationInput | Prisma.OptOutRequestOrderByWithRelationInput[]
+  cursor?: Prisma.OptOutRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OptOutRequestScalarFieldEnum | Prisma.OptOutRequestScalarFieldEnum[]
+}
+
+/**
  * User.participations
  */
 export type User$participationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2056,49 +2099,6 @@ export type User$payoutsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.PayoutScalarFieldEnum | Prisma.PayoutScalarFieldEnum[]
-}
-
-/**
- * User.optOutRequests
- */
-export type User$optOutRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the OptOutRequest
-   */
-  select?: Prisma.OptOutRequestSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the OptOutRequest
-   */
-  omit?: Prisma.OptOutRequestOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OptOutRequestInclude<ExtArgs> | null
-  where?: Prisma.OptOutRequestWhereInput
-  orderBy?: Prisma.OptOutRequestOrderByWithRelationInput | Prisma.OptOutRequestOrderByWithRelationInput[]
-  cursor?: Prisma.OptOutRequestWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.OptOutRequestScalarFieldEnum | Prisma.OptOutRequestScalarFieldEnum[]
-}
-
-/**
- * User.pick
- */
-export type User$pickArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the NumberPick
-   */
-  select?: Prisma.NumberPickSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the NumberPick
-   */
-  omit?: Prisma.NumberPickOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.NumberPickInclude<ExtArgs> | null
-  where?: Prisma.NumberPickWhereInput
 }
 
 /**

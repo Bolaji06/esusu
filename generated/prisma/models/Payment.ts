@@ -340,9 +340,9 @@ export type PaymentWhereInput = {
   notes?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
+  cycle?: Prisma.XOR<Prisma.ContributionCycleScalarRelationFilter, Prisma.ContributionCycleWhereInput>
   participation?: Prisma.XOR<Prisma.ParticipationScalarRelationFilter, Prisma.ParticipationWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  cycle?: Prisma.XOR<Prisma.ContributionCycleScalarRelationFilter, Prisma.ContributionCycleWhereInput>
 }
 
 export type PaymentOrderByWithRelationInput = {
@@ -365,9 +365,9 @@ export type PaymentOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  cycle?: Prisma.ContributionCycleOrderByWithRelationInput
   participation?: Prisma.ParticipationOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
-  cycle?: Prisma.ContributionCycleOrderByWithRelationInput
 }
 
 export type PaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -394,9 +394,9 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
+  cycle?: Prisma.XOR<Prisma.ContributionCycleScalarRelationFilter, Prisma.ContributionCycleWhereInput>
   participation?: Prisma.XOR<Prisma.ParticipationScalarRelationFilter, Prisma.ParticipationWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  cycle?: Prisma.XOR<Prisma.ContributionCycleScalarRelationFilter, Prisma.ContributionCycleWhereInput>
 }, "id" | "participationId_monthNumber">
 
 export type PaymentOrderByWithAggregationInput = {
@@ -468,9 +468,9 @@ export type PaymentCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  cycle: Prisma.ContributionCycleCreateNestedOneWithoutPaymentsInput
   participation: Prisma.ParticipationCreateNestedOneWithoutPaymentsInput
   user: Prisma.UserCreateNestedOneWithoutPaymentsInput
-  cycle: Prisma.ContributionCycleCreateNestedOneWithoutPaymentsInput
 }
 
 export type PaymentUncheckedCreateInput = {
@@ -512,9 +512,9 @@ export type PaymentUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutPaymentsNestedInput
   participation?: Prisma.ParticipationUpdateOneRequiredWithoutPaymentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
-  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutPaymentsNestedInput
 }
 
 export type PaymentUncheckedUpdateInput = {
@@ -844,8 +844,8 @@ export type PaymentCreateWithoutUserInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  participation: Prisma.ParticipationCreateNestedOneWithoutPaymentsInput
   cycle: Prisma.ContributionCycleCreateNestedOneWithoutPaymentsInput
+  participation: Prisma.ParticipationCreateNestedOneWithoutPaymentsInput
 }
 
 export type PaymentUncheckedCreateWithoutUserInput = {
@@ -1005,8 +1005,8 @@ export type PaymentCreateWithoutParticipationInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutPaymentsInput
   cycle: Prisma.ContributionCycleCreateNestedOneWithoutPaymentsInput
+  user: Prisma.UserCreateNestedOneWithoutPaymentsInput
 }
 
 export type PaymentUncheckedCreateWithoutParticipationInput = {
@@ -1094,8 +1094,8 @@ export type PaymentUpdateWithoutUserInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  participation?: Prisma.ParticipationUpdateOneRequiredWithoutPaymentsNestedInput
   cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutPaymentsNestedInput
+  participation?: Prisma.ParticipationUpdateOneRequiredWithoutPaymentsNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutUserInput = {
@@ -1262,8 +1262,8 @@ export type PaymentUpdateWithoutParticipationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
   cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutPaymentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutParticipationInput = {
@@ -1330,9 +1330,9 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
   participation?: boolean | Prisma.ParticipationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1355,9 +1355,9 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
   participation?: boolean | Prisma.ParticipationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1380,9 +1380,9 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
   participation?: boolean | Prisma.ParticipationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectScalar = {
@@ -1409,27 +1409,27 @@ export type PaymentSelectScalar = {
 
 export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "participationId" | "userId" | "cycleId" | "monthNumber" | "dueDate" | "amount" | "paidAt" | "paidAmount" | "status" | "hasFine" | "fineAmount" | "finePaid" | "proofOfPayment" | "verifiedBy" | "verifiedAt" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
   participation?: boolean | Prisma.ParticipationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
 }
 export type PaymentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
   participation?: boolean | Prisma.ParticipationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
 }
 export type PaymentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
   participation?: boolean | Prisma.ParticipationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
 }
 
 export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Payment"
   objects: {
+    cycle: Prisma.$ContributionCyclePayload<ExtArgs>
     participation: Prisma.$ParticipationPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
-    cycle: Prisma.$ContributionCyclePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1845,9 +1845,9 @@ readonly fields: PaymentFieldRefs;
  */
 export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  cycle<T extends Prisma.ContributionCycleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContributionCycleDefaultArgs<ExtArgs>>): Prisma.Prisma__ContributionCycleClient<runtime.Types.Result.GetResult<Prisma.$ContributionCyclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   participation<T extends Prisma.ParticipationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ParticipationDefaultArgs<ExtArgs>>): Prisma.Prisma__ParticipationClient<runtime.Types.Result.GetResult<Prisma.$ParticipationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  cycle<T extends Prisma.ContributionCycleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContributionCycleDefaultArgs<ExtArgs>>): Prisma.Prisma__ContributionCycleClient<runtime.Types.Result.GetResult<Prisma.$ContributionCyclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

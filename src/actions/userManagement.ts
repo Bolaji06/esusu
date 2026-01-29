@@ -602,13 +602,22 @@ export async function deleteUser(
           status: "DELETED",
         },
       });
+
+      // Also delete global number picks if any
+      await tx.numberPick.deleteMany({
+        where: { userId: userId },
+      });
     });
 
     console.log(
       `User ${userId} deleted by admin ${adminId}. Reason: ${reason}`,
     );
 
-    revalidatePath("/dashboard/admin/users");
+    try {
+      revalidatePath("/dashboard/admin/users");
+    } catch (e) {
+      console.log("revalidatePath skipped (non-Next context)");
+    }
 
     return {
       success: true,

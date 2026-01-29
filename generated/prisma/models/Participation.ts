@@ -268,9 +268,9 @@ export type ParticipationWhereInput = {
   fineAmount?: Prisma.IntFilter<"Participation"> | number
   registeredAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   hasOptedOut?: Prisma.BoolFilter<"Participation"> | boolean
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  cycle?: Prisma.XOR<Prisma.ContributionCycleScalarRelationFilter, Prisma.ContributionCycleWhereInput>
   bankDetails?: Prisma.XOR<Prisma.BankDetailsNullableScalarRelationFilter, Prisma.BankDetailsWhereInput> | null
+  cycle?: Prisma.XOR<Prisma.ContributionCycleScalarRelationFilter, Prisma.ContributionCycleWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   payments?: Prisma.PaymentListRelationFilter
   payout?: Prisma.XOR<Prisma.PayoutNullableScalarRelationFilter, Prisma.PayoutWhereInput> | null
 }
@@ -286,9 +286,9 @@ export type ParticipationOrderByWithRelationInput = {
   fineAmount?: Prisma.SortOrder
   registeredAt?: Prisma.SortOrder
   hasOptedOut?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  cycle?: Prisma.ContributionCycleOrderByWithRelationInput
   bankDetails?: Prisma.BankDetailsOrderByWithRelationInput
+  cycle?: Prisma.ContributionCycleOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   payout?: Prisma.PayoutOrderByWithRelationInput
 }
@@ -309,9 +309,9 @@ export type ParticipationWhereUniqueInput = Prisma.AtLeast<{
   fineAmount?: Prisma.IntFilter<"Participation"> | number
   registeredAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   hasOptedOut?: Prisma.BoolFilter<"Participation"> | boolean
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  cycle?: Prisma.XOR<Prisma.ContributionCycleScalarRelationFilter, Prisma.ContributionCycleWhereInput>
   bankDetails?: Prisma.XOR<Prisma.BankDetailsNullableScalarRelationFilter, Prisma.BankDetailsWhereInput> | null
+  cycle?: Prisma.XOR<Prisma.ContributionCycleScalarRelationFilter, Prisma.ContributionCycleWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   payments?: Prisma.PaymentListRelationFilter
   payout?: Prisma.XOR<Prisma.PayoutNullableScalarRelationFilter, Prisma.PayoutWhereInput> | null
 }, "id" | "userId_cycleId" | "cycleId_pickedNumber">
@@ -359,9 +359,9 @@ export type ParticipationCreateInput = {
   fineAmount: number
   registeredAt?: Date | string
   hasOptedOut?: boolean
-  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
-  cycle: Prisma.ContributionCycleCreateNestedOneWithoutParticipationsInput
   bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutParticipationInput
+  cycle: Prisma.ContributionCycleCreateNestedOneWithoutParticipationsInput
+  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutParticipationInput
   payout?: Prisma.PayoutCreateNestedOneWithoutParticipationInput
 }
@@ -391,9 +391,9 @@ export type ParticipationUpdateInput = {
   fineAmount?: Prisma.IntFieldUpdateOperationsInput | number
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hasOptedOut?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
-  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutParticipationsNestedInput
   bankDetails?: Prisma.BankDetailsUpdateOneWithoutParticipationNestedInput
+  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutParticipationsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutParticipationNestedInput
   payout?: Prisma.PayoutUpdateOneWithoutParticipationNestedInput
 }
@@ -676,8 +676,8 @@ export type ParticipationCreateWithoutUserInput = {
   fineAmount: number
   registeredAt?: Date | string
   hasOptedOut?: boolean
-  cycle: Prisma.ContributionCycleCreateNestedOneWithoutParticipationsInput
   bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutParticipationInput
+  cycle: Prisma.ContributionCycleCreateNestedOneWithoutParticipationsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutParticipationInput
   payout?: Prisma.PayoutCreateNestedOneWithoutParticipationInput
 }
@@ -748,8 +748,8 @@ export type ParticipationCreateWithoutBankDetailsInput = {
   fineAmount: number
   registeredAt?: Date | string
   hasOptedOut?: boolean
-  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
   cycle: Prisma.ContributionCycleCreateNestedOneWithoutParticipationsInput
+  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutParticipationInput
   payout?: Prisma.PayoutCreateNestedOneWithoutParticipationInput
 }
@@ -794,8 +794,8 @@ export type ParticipationUpdateWithoutBankDetailsInput = {
   fineAmount?: Prisma.IntFieldUpdateOperationsInput | number
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hasOptedOut?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
   cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutParticipationsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutParticipationNestedInput
   payout?: Prisma.PayoutUpdateOneWithoutParticipationNestedInput
 }
@@ -824,8 +824,8 @@ export type ParticipationCreateWithoutCycleInput = {
   fineAmount: number
   registeredAt?: Date | string
   hasOptedOut?: boolean
-  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
   bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutParticipationInput
+  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutParticipationInput
   payout?: Prisma.PayoutCreateNestedOneWithoutParticipationInput
 }
@@ -880,9 +880,9 @@ export type ParticipationCreateWithoutPaymentsInput = {
   fineAmount: number
   registeredAt?: Date | string
   hasOptedOut?: boolean
-  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
-  cycle: Prisma.ContributionCycleCreateNestedOneWithoutParticipationsInput
   bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutParticipationInput
+  cycle: Prisma.ContributionCycleCreateNestedOneWithoutParticipationsInput
+  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
   payout?: Prisma.PayoutCreateNestedOneWithoutParticipationInput
 }
 
@@ -926,9 +926,9 @@ export type ParticipationUpdateWithoutPaymentsInput = {
   fineAmount?: Prisma.IntFieldUpdateOperationsInput | number
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hasOptedOut?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
-  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutParticipationsNestedInput
   bankDetails?: Prisma.BankDetailsUpdateOneWithoutParticipationNestedInput
+  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutParticipationsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
   payout?: Prisma.PayoutUpdateOneWithoutParticipationNestedInput
 }
 
@@ -956,9 +956,9 @@ export type ParticipationCreateWithoutPayoutInput = {
   fineAmount: number
   registeredAt?: Date | string
   hasOptedOut?: boolean
-  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
-  cycle: Prisma.ContributionCycleCreateNestedOneWithoutParticipationsInput
   bankDetails?: Prisma.BankDetailsCreateNestedOneWithoutParticipationInput
+  cycle: Prisma.ContributionCycleCreateNestedOneWithoutParticipationsInput
+  user: Prisma.UserCreateNestedOneWithoutParticipationsInput
   payments?: Prisma.PaymentCreateNestedManyWithoutParticipationInput
 }
 
@@ -1002,9 +1002,9 @@ export type ParticipationUpdateWithoutPayoutInput = {
   fineAmount?: Prisma.IntFieldUpdateOperationsInput | number
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hasOptedOut?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
-  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutParticipationsNestedInput
   bankDetails?: Prisma.BankDetailsUpdateOneWithoutParticipationNestedInput
+  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutParticipationsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutParticipationNestedInput
 }
 
@@ -1044,8 +1044,8 @@ export type ParticipationUpdateWithoutUserInput = {
   fineAmount?: Prisma.IntFieldUpdateOperationsInput | number
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hasOptedOut?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutParticipationsNestedInput
   bankDetails?: Prisma.BankDetailsUpdateOneWithoutParticipationNestedInput
+  cycle?: Prisma.ContributionCycleUpdateOneRequiredWithoutParticipationsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutParticipationNestedInput
   payout?: Prisma.PayoutUpdateOneWithoutParticipationNestedInput
 }
@@ -1098,8 +1098,8 @@ export type ParticipationUpdateWithoutCycleInput = {
   fineAmount?: Prisma.IntFieldUpdateOperationsInput | number
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hasOptedOut?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
   bankDetails?: Prisma.BankDetailsUpdateOneWithoutParticipationNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutParticipationsNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutParticipationNestedInput
   payout?: Prisma.PayoutUpdateOneWithoutParticipationNestedInput
 }
@@ -1173,9 +1173,9 @@ export type ParticipationSelect<ExtArgs extends runtime.Types.Extensions.Interna
   fineAmount?: boolean
   registeredAt?: boolean
   hasOptedOut?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
   bankDetails?: boolean | Prisma.Participation$bankDetailsArgs<ExtArgs>
+  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Participation$paymentsArgs<ExtArgs>
   payout?: boolean | Prisma.Participation$payoutArgs<ExtArgs>
   _count?: boolean | Prisma.ParticipationCountOutputTypeDefaultArgs<ExtArgs>
@@ -1192,8 +1192,8 @@ export type ParticipationSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   fineAmount?: boolean
   registeredAt?: boolean
   hasOptedOut?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
 
 export type ParticipationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1207,8 +1207,8 @@ export type ParticipationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   fineAmount?: boolean
   registeredAt?: boolean
   hasOptedOut?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
 
 export type ParticipationSelectScalar = {
@@ -1226,28 +1226,28 @@ export type ParticipationSelectScalar = {
 
 export type ParticipationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "cycleId" | "contributionMode" | "pickedNumber" | "monthlyAmount" | "totalPayout" | "fineAmount" | "registeredAt" | "hasOptedOut", ExtArgs["result"]["participation"]>
 export type ParticipationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
   bankDetails?: boolean | Prisma.Participation$bankDetailsArgs<ExtArgs>
+  cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Participation$paymentsArgs<ExtArgs>
   payout?: boolean | Prisma.Participation$payoutArgs<ExtArgs>
   _count?: boolean | Prisma.ParticipationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ParticipationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ParticipationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   cycle?: boolean | Prisma.ContributionCycleDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $ParticipationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Participation"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-    cycle: Prisma.$ContributionCyclePayload<ExtArgs>
     bankDetails: Prisma.$BankDetailsPayload<ExtArgs> | null
+    cycle: Prisma.$ContributionCyclePayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     payout: Prisma.$PayoutPayload<ExtArgs> | null
   }
@@ -1656,9 +1656,9 @@ readonly fields: ParticipationFieldRefs;
  */
 export interface Prisma__ParticipationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  cycle<T extends Prisma.ContributionCycleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContributionCycleDefaultArgs<ExtArgs>>): Prisma.Prisma__ContributionCycleClient<runtime.Types.Result.GetResult<Prisma.$ContributionCyclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   bankDetails<T extends Prisma.Participation$bankDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participation$bankDetailsArgs<ExtArgs>>): Prisma.Prisma__BankDetailsClient<runtime.Types.Result.GetResult<Prisma.$BankDetailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  cycle<T extends Prisma.ContributionCycleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContributionCycleDefaultArgs<ExtArgs>>): Prisma.Prisma__ContributionCycleClient<runtime.Types.Result.GetResult<Prisma.$ContributionCyclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payments<T extends Prisma.Participation$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participation$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payout<T extends Prisma.Participation$payoutArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participation$payoutArgs<ExtArgs>>): Prisma.Prisma__PayoutClient<runtime.Types.Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
