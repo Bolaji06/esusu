@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../lib/prisma";
 
 const SECRET_KEY = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-secret-key-change-this-in-production"
+  process.env.JWT_SECRET || "your-secret-key-change-this-in-production",
 );
 
 async function createToken(userId: string, isAdmin: boolean) {
@@ -140,7 +140,7 @@ export async function login(prevState: unknown, formData: FormData) {
 
   try {
     // Find user
-   
+
     const user = await prisma.user.findUnique({
       where: { phone },
     });
@@ -243,5 +243,78 @@ export async function getCurrentUser() {
     return user;
   } catch (error) {
     return null;
+  }
+}
+
+// RESET PASSWORD ACTION
+export async function resetPassword(prevState: unknown, formData: FormData) {
+  const phone = formData.get("phone") as string;
+  const password = formData.get("password") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
+
+  // Validation
+  if (!phone?.trim() || !password?.trim() || !confirmPassword?.trim()) {
+    return {
+      error: "Phone and both password fields are required",
+      success: false,
+    };
+  }
+
+  if (password.length < 6) {
+    return {
+      error: "Password must be at least 6 characters",
+      success: false,
+    };
+  }
+
+  if (password !== confirmPassword) {
+    return {
+      error: "Passwords do not match",
+      success: false,
+    };
+  }
+
+  // Phone validation (Nigerian format)
+  const phoneRegex = /^(\+234|0)[789][01]\d{8}$/;
+  if (!phoneRegex.test(phone)) {
+    return {
+      error: "Please enter a valid Nigerian phone number",
+      success: false,
+    };
+  }
+
+  try {
+    // Find user
+    const user = await prisma.user.findUnique({
+      where: { phone },
+    });
+
+    if (!user) {
+      return {
+        error: "User with this phone number not found",
+        success: false,
+      };
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user password
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword },
+    });
+
+    return {
+      success: true,
+      message:
+        "Password reset successful! Please login with your new password.",
+    };
+  } catch (error) {
+    console.error("Reset password error:", error);
+    return {
+      error: "Something went wrong. Please try again.",
+      success: false,
+    };
   }
 }

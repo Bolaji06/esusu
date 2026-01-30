@@ -1,14 +1,11 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
-import { motion } from "framer-motion";
 import { useActionState, useEffect, useState } from "react";
+import { useFormStatus } from "react-dom";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { login } from "../actions/auth";
-import { Phone, Lock, Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
-import ForgotPasswordForm from "./ForgotPasswordForm";
+import { Phone, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { resetPassword } from "../actions/auth";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -23,39 +20,49 @@ function SubmitButton() {
       {pending ? (
         <span className="flex items-center justify-center gap-2">
           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          Signing in...
+          Resetting...
         </span>
       ) : (
-        "Sign In"
+        "Reset Password"
       )}
     </motion.button>
   );
 }
 
-export default function LoginForm() {
-  const router = useRouter();
-  const [state, formAction] = useActionState(login, null);
+interface ForgotPasswordFormProps {
+  onBackToLogin: () => void;
+}
+
+export default function ForgotPasswordForm({
+  onBackToLogin,
+}: ForgotPasswordFormProps) {
+  const [state, formAction] = useActionState(resetPassword, null);
   const [showPassword, setShowPassword] = useState(false);
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     if (state?.success) {
-      toast.success(`Welcome back, ${state?.user?.fullName}! 🎉`);
-      router.push("/dashboard");
-      router.refresh();
+      toast.success(state.message || "Password reset successful! 🎉");
+      onBackToLogin();
     } else if (state?.error) {
       toast.error(state.error);
     }
-  }, [state, router]);
-
-  if (isForgotPassword) {
-    return (
-      <ForgotPasswordForm onBackToLogin={() => setIsForgotPassword(false)} />
-    );
-  }
+  }, [state, onBackToLogin]);
 
   return (
     <form action={formAction} className="space-y-6">
+      <div className="flex items-center gap-2 mb-2">
+        <button
+          type="button"
+          onClick={onBackToLogin}
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-600"
+          title="Back to Login"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <h2 className="text-xl font-semibold text-gray-800">Reset Password</h2>
+      </div>
+
       {/* Phone */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -73,26 +80,17 @@ export default function LoginForm() {
         </div>
       </div>
 
-      {/* Password */}
+      {/* New Password */}
       <div>
-        <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <button
-            type="button"
-            onClick={() => setIsForgotPassword(true)}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700 cursor-pointer"
-          >
-            Forgot Password?
-          </button>
-        </div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          New Password
+        </label>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type={showPassword ? "text" : "password"}
             name="password"
-            placeholder="Enter your password"
+            placeholder="Min. 6 characters"
             required
             className="w-full pl-11 pr-11 py-4 text-black rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition-all text-lg"
           />
@@ -110,18 +108,35 @@ export default function LoginForm() {
         </div>
       </div>
 
-      <SubmitButton />
+      {/* Confirm Password */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Confirm New Password
+        </label>
+        <div className="relative">
+          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            name="confirmPassword"
+            placeholder="Repeat new password"
+            required
+            className="w-full pl-11 pr-11 py-4 text-black rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition-all text-lg"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            {showConfirmPassword ? (
+              <EyeOff className="w-5 h-5" />
+            ) : (
+              <Eye className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+      </div>
 
-      {/* Register Link */}
-      <p className="text-center text-sm text-gray-600">
-        Don&apos;t have an account?{" "}
-        <Link
-          href="/register"
-          className="text-indigo-600 hover:text-indigo-700 font-semibold"
-        >
-          Register here
-        </Link>
-      </p>
+      <SubmitButton />
     </form>
   );
 }
