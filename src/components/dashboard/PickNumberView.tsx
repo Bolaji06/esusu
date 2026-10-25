@@ -19,6 +19,7 @@ interface Props {
     status: string;
     canPickNumbers: boolean;
     numberPickingStartDate?: Date | null;
+    hiddenNumbers?: number[];
   };
   userPick: {
     number: number;
@@ -27,9 +28,6 @@ interface Props {
   takenNumbers: number[];
 }
 
-// House reserved numbers
-const HOUSE_RESERVED_NUMBERS = [1, 2];
-
 export default function PickNumberView({
   userId,
   cycleData,
@@ -37,6 +35,7 @@ export default function PickNumberView({
   takenNumbers,
 }: Props) {
   const router = useRouter();
+  const hiddenNumbers = cycleData.hiddenNumbers ?? [1, 2];
   const [revealed, setRevealed] = useState<number[]>(userPick ? [userPick.number] : []);
   const [selected, setSelected] = useState<number | null>(userPick?.number || null);
   const [isPicking, setIsPicking] = useState(false);
@@ -62,9 +61,9 @@ export default function PickNumberView({
   const handleSelect = async (num: number) => {
     if (selected || isPicking) return;
 
-    // Check if number is house reserved
-    if (HOUSE_RESERVED_NUMBERS.includes(num)) {
-      toast.error(`Number ${num} is reserved for house payouts`, {
+    // Check if number is reserved
+    if (hiddenNumbers.includes(num)) {
+      toast.error(`Number ${num} is reserved and cannot be selected`, {
         description: "Please select a different number",
       });
       return;
@@ -102,9 +101,12 @@ export default function PickNumberView({
 
   // Calculate available numbers (displaySlots - taken - reserved)
   const userTakenNumbers = takenNumbers.filter(
-    (n) => !HOUSE_RESERVED_NUMBERS.includes(n)
+    (n) => !hiddenNumbers.includes(n)
   );
-  const availableNumbers = cycleData.displaySlots - userTakenNumbers.length - HOUSE_RESERVED_NUMBERS.length;
+  const availableNumbers = Math.max(
+    0,
+    cycleData.displaySlots - userTakenNumbers.length - hiddenNumbers.length
+  );
 
   // Loading state
   if (isCheckingParticipation) {
@@ -279,7 +281,7 @@ export default function PickNumberView({
             <Home className="w-6 h-6 text-amber-600" />
           </div>
           <p className="text-sm text-gray-600 mb-1">House Reserved</p>
-          <p className="text-3xl font-bold text-gray-800">{HOUSE_RESERVED_NUMBERS.length}</p>
+          <p className="text-3xl font-bold text-gray-800">{hiddenNumbers.length}</p>
         </motion.div>
 
         <motion.div
@@ -323,10 +325,11 @@ export default function PickNumberView({
               <h3 className="font-bold text-indigo-900 mb-2">Important Information</h3>
               <ul className="space-y-2 text-sm text-indigo-800">
                 <li>• Your picked number determines when you receive your payout</li>
-                {/* <li>
-                  • <strong>Numbers 1 & 2 are reserved for house payouts</strong> and cannot be selected
-                </li>
-                <li>• Number 3 = Month 3 payout, Number {cycleData.displaySlots} = Month {cycleData.displaySlots} payout</li> */}
+                {hiddenNumbers.length > 0 && (
+                  <li>
+                    • <strong>Numbers {hiddenNumbers.slice().sort((a, b) => a - b).join(", ")} are reserved for house payouts</strong> and cannot be selected
+                  </li>
+                )}
                 <li>• Once picked, numbers cannot be changed</li>
                 <li>• You can only pick one number per cycle</li>
               </ul>
@@ -339,10 +342,8 @@ export default function PickNumberView({
       <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100">
         <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 sm:gap-5 md:gap-6 justify-items-center">
           {numbers.map((num, index) => {
-            // Treat house reserved numbers as just "taken" for visual consistency
-            // const isHouseReserved = HOUSE_RESERVED_NUMBERS.includes(num);
-            const isHouseReserved = false;
-            const isUserTaken = takenNumbers.includes(num);
+            const isHouseReserved = hiddenNumbers.includes(num);
+            const isUserTaken = takenNumbers.includes(num) && !isHouseReserved;
 
             return (
               <motion.div

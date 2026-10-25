@@ -3,9 +3,6 @@
 import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 
-// Constants for restricted numbers
-const HOUSE_RESERVED_NUMBERS = [1, 2];
-
 export async function getActiveCycle(userId?: string) {
   try {
     let cycle;
@@ -42,6 +39,7 @@ export async function getActiveCycle(userId?: string) {
         canPickNumbers: false,
         hasActiveParticipation: false,
         displaySlots: 20,
+        hiddenNumbers: [1, 2],
       };
     }
 
@@ -61,6 +59,7 @@ export async function getActiveCycle(userId?: string) {
       canPickNumbers,
       numberPickingStartDate: cycle.numberPickingStartDate,
       hasActiveParticipation: userId ? true : false,
+      hiddenNumbers: cycle.hiddenNumbers ?? [1, 2],
     };
   } catch (error) {
     console.error("Error getting active cycle:", error);
@@ -72,20 +71,13 @@ export async function getActiveCycle(userId?: string) {
       canPickNumbers: false,
       hasActiveParticipation: false,
       displaySlots: 20,
+      hiddenNumbers: [1, 2],
     };
   }
 }
 
 export async function pickNumber(userId: string, number: number) {
   try {
-    // Validate that number is not reserved for house
-    if (HOUSE_RESERVED_NUMBERS.includes(number)) {
-      return {
-        success: false,
-        error: `Number ${number} is reserved for house payouts and cannot be selected`,
-      };
-    }
-
     // Get the cycle the user is participating in
     const participation = await prisma.participation.findFirst({
       where: {
@@ -107,6 +99,15 @@ export async function pickNumber(userId: string, number: number) {
 
     const cycle = participation.cycle;
     console.log("User's active cycle:", cycle);
+
+    // Validate that number is not hidden / reserved for this cycle
+    const hiddenNumbers = cycle.hiddenNumbers ?? [1, 2];
+    if (hiddenNumbers.includes(number)) {
+      return {
+        success: false,
+        error: `Number ${number} is reserved and cannot be selected`,
+      };
+    }
 
     // Check if number picking has started
     if (
@@ -294,12 +295,13 @@ export async function getAllPicks(userId: string) {
       },
     });
 
-    // Add house reserved numbers to the taken list
+    // Add cycle hidden / reserved numbers to the taken list
     const userPicks = picks
       .map((p: { pickedNumber: any }) => p.pickedNumber)
       .filter((n: number | null): n is number => n !== null);
 
-    return [...HOUSE_RESERVED_NUMBERS, ...userPicks];
+    const hiddenNumbers = participation.cycle.hiddenNumbers ?? [1, 2];
+    return Array.from(new Set([...hiddenNumbers, ...userPicks]));
   } catch (error) {
     console.error("Error getting all picks:", error);
     return [];

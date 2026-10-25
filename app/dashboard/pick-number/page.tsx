@@ -14,7 +14,7 @@ export default async function PickNumberPage() {
     redirect("/login");
   }
 
-  const cycleData = await getActiveCycle();
+  const cycleData = await getActiveCycle(user.id);
   const userPick = await getUserPick(user.id);
   const takenNumbers = await getAllPicks(user.id);
 

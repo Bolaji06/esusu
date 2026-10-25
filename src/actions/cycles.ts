@@ -20,6 +20,7 @@ export interface CycleUpdateData {
   status?: CycleStatus;
   totalSlots?: number;
   paymentDeadlineDay?: number;
+  hiddenNumbers?: number[];
 }
 
 // Verify admin access
@@ -69,6 +70,7 @@ export async function getAllCyclesWithDetails() {
       status: cycle.status,
       totalSlots: cycle.totalSlots,
       paymentDeadlineDay: cycle.paymentDeadlineDay,
+      hiddenNumbers: cycle.hiddenNumbers ?? [1, 2],
       createdAt: cycle.createdAt,
       // Stats
       totalParticipants: cycle.participations.length,
@@ -132,6 +134,7 @@ export async function getCycleDetails(cycleId: string) {
       status: cycle.status,
       totalSlots: cycle.totalSlots,
       paymentDeadlineDay: cycle.paymentDeadlineDay,
+      hiddenNumbers: cycle.hiddenNumbers ?? [1, 2],
       createdAt: cycle.createdAt,
       participants: cycle.participations.map(
         (p: {
@@ -191,6 +194,18 @@ export async function createCycle(
   const paymentDeadlineDay = parseInt(
     formData.get("paymentDeadlineDay") as string,
   );
+  const rawHidden = formData.get("hiddenNumbers") as string | null;
+  let hiddenNumbers = [1, 2];
+  if (rawHidden !== null && rawHidden !== undefined && rawHidden.trim() !== "") {
+    try {
+      hiddenNumbers = JSON.parse(rawHidden);
+    } catch {
+      hiddenNumbers = rawHidden
+        .split(",")
+        .map((s) => parseInt(s.trim(), 10))
+        .filter((n) => !isNaN(n));
+    }
+  }
 
   // Validation
   if (!name?.trim()) {
@@ -230,6 +245,7 @@ export async function createCycle(
         status,
         totalSlots,
         paymentDeadlineDay,
+        hiddenNumbers,
       },
     });
 
@@ -299,6 +315,48 @@ export async function updateCycle(
       }
     }
 
+    // Validate hidden numbers if provided
+    let cleanedHiddenNumbers: number[] | undefined = undefined;
+    if (data.hiddenNumbers !== undefined) {
+      cleanedHiddenNumbers = Array.from(new Set(data.hiddenNumbers))
+        .filter((n) => typeof n === "number" && !isNaN(n))
+        .sort((a, b) => a - b);
+
+      const maxSlots = data.totalSlots || existingCycle.totalSlots;
+
+      // Check range
+      const outOfRange = cleanedHiddenNumbers.filter((n) => n < 1 || n > maxSlots);
+      if (outOfRange.length > 0) {
+        return {
+          success: false,
+          error: `Hidden numbers must be between 1 and ${maxSlots}. Invalid: ${outOfRange.join(", ")}`,
+        };
+      }
+
+      // Check if trying to hide all slots
+      if (cleanedHiddenNumbers.length >= maxSlots) {
+        return {
+          success: false,
+          error: `Cannot hide all slots. At least one slot must remain pickable for users.`,
+        };
+      }
+
+      // Check if any active user has already picked one of these hidden numbers
+      const alreadyPicked = existingCycle.participations
+        .filter(
+          (p: any) =>
+            p.pickedNumber !== null && cleanedHiddenNumbers!.includes(p.pickedNumber),
+        )
+        .map((p: any) => p.pickedNumber as number);
+
+      if (alreadyPicked.length > 0) {
+        return {
+          success: false,
+          error: `Cannot hide number(s) ${alreadyPicked.join(", ")} as they have already been picked by participants in this cycle.`,
+        };
+      }
+    }
+
     // Update cycle
     await prisma.contributionCycle.update({
       where: { id: cycleId },
@@ -315,6 +373,7 @@ export async function updateCycle(
         status: data.status,
         totalSlots: data.totalSlots,
         paymentDeadlineDay: data.paymentDeadlineDay,
+        hiddenNumbers: cleanedHiddenNumbers,
       },
     });
 

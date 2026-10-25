@@ -26,6 +26,7 @@ interface Cycle {
   status: string;
   totalSlots: number;
   paymentDeadlineDay: number;
+  hiddenNumbers?: number[];
   createdAt: Date;
   totalParticipants: number;
   activeParticipants: number;

@@ -33,6 +33,7 @@ interface Cycle {
   registrationDeadline: Date;
   status: string;
   totalSlots: number;
+  hiddenNumbers?: number[];
   totalParticipants: number;
   activeParticipants: number;
   pickedNumbers: number;

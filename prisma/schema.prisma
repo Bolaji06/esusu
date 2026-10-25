@@ -47,6 +47,7 @@ model ContributionCycle {
   status                 CycleStatus     @default(UPCOMING)
   paymentDeadlineDay     Int             @default(29)
   totalSlots             Int             @default(20)
+  hiddenNumbers          Int[]           @default([1, 2])
   createdAt              DateTime        @default(now())
   updatedAt              DateTime        @updatedAt
   participations         Participation[]

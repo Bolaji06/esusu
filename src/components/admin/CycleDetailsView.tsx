@@ -36,6 +36,7 @@ interface Cycle {
   status: string;
   totalSlots: number;
   paymentDeadlineDay: number;
+  hiddenNumbers?: number[];
   createdAt: Date;
   participants: Participant[];
 }
@@ -168,6 +169,24 @@ export default function CycleDetailsView({ cycle, adminId }: Props) {
             <p className="text-lg font-semibold text-gray-800">
               Day {cycle.paymentDeadlineDay} of each month
             </p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-600 mb-1">Hidden / House Numbers</p>
+            <div className="flex flex-wrap gap-1 mt-1">
+              {cycle.hiddenNumbers && cycle.hiddenNumbers.length > 0 ? (
+                cycle.hiddenNumbers.map((n) => (
+                  <span
+                    key={n}
+                    className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200"
+                  >
+                    #{n}
+                  </span>
+                ))
+              ) : (
+                <span className="text-sm text-gray-500 italic">None</span>
+              )}
+            </div>
           </div>
         </div>
       </motion.div>

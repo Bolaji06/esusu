@@ -1232,6 +1232,7 @@ export const ContributionCycleScalarFieldEnum = {
   status: 'status',
   paymentDeadlineDay: 'paymentDeadlineDay',
   totalSlots: 'totalSlots',
+  hiddenNumbers: 'hiddenNumbers',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

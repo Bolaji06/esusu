@@ -29,11 +29,13 @@ export type AggregateContributionCycle = {
 export type ContributionCycleAvgAggregateOutputType = {
   paymentDeadlineDay: number | null
   totalSlots: number | null
+  hiddenNumbers: number | null
 }
 
 export type ContributionCycleSumAggregateOutputType = {
   paymentDeadlineDay: number | null
   totalSlots: number | null
+  hiddenNumbers: number[]
 }
 
 export type ContributionCycleMinAggregateOutputType = {
@@ -74,6 +76,7 @@ export type ContributionCycleCountAggregateOutputType = {
   status: number
   paymentDeadlineDay: number
   totalSlots: number
+  hiddenNumbers: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -83,11 +86,13 @@ export type ContributionCycleCountAggregateOutputType = {
 export type ContributionCycleAvgAggregateInputType = {
   paymentDeadlineDay?: true
   totalSlots?: true
+  hiddenNumbers?: true
 }
 
 export type ContributionCycleSumAggregateInputType = {
   paymentDeadlineDay?: true
   totalSlots?: true
+  hiddenNumbers?: true
 }
 
 export type ContributionCycleMinAggregateInputType = {
@@ -128,6 +133,7 @@ export type ContributionCycleCountAggregateInputType = {
   status?: true
   paymentDeadlineDay?: true
   totalSlots?: true
+  hiddenNumbers?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -229,6 +235,7 @@ export type ContributionCycleGroupByOutputType = {
   status: $Enums.CycleStatus
   paymentDeadlineDay: number
   totalSlots: number
+  hiddenNumbers: number[]
   createdAt: Date
   updatedAt: Date
   _count: ContributionCycleCountAggregateOutputType | null
@@ -266,6 +273,7 @@ export type ContributionCycleWhereInput = {
   status?: Prisma.EnumCycleStatusFilter<"ContributionCycle"> | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFilter<"ContributionCycle"> | number
   totalSlots?: Prisma.IntFilter<"ContributionCycle"> | number
+  hiddenNumbers?: Prisma.IntNullableListFilter<"ContributionCycle">
   createdAt?: Prisma.DateTimeFilter<"ContributionCycle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContributionCycle"> | Date | string
   participations?: Prisma.ParticipationListRelationFilter
@@ -283,6 +291,7 @@ export type ContributionCycleOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   paymentDeadlineDay?: Prisma.SortOrder
   totalSlots?: Prisma.SortOrder
+  hiddenNumbers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   participations?: Prisma.ParticipationOrderByRelationAggregateInput
@@ -303,6 +312,7 @@ export type ContributionCycleWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumCycleStatusFilter<"ContributionCycle"> | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFilter<"ContributionCycle"> | number
   totalSlots?: Prisma.IntFilter<"ContributionCycle"> | number
+  hiddenNumbers?: Prisma.IntNullableListFilter<"ContributionCycle">
   createdAt?: Prisma.DateTimeFilter<"ContributionCycle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContributionCycle"> | Date | string
   participations?: Prisma.ParticipationListRelationFilter
@@ -320,6 +330,7 @@ export type ContributionCycleOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   paymentDeadlineDay?: Prisma.SortOrder
   totalSlots?: Prisma.SortOrder
+  hiddenNumbers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ContributionCycleCountOrderByAggregateInput
@@ -342,6 +353,7 @@ export type ContributionCycleScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumCycleStatusWithAggregatesFilter<"ContributionCycle"> | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntWithAggregatesFilter<"ContributionCycle"> | number
   totalSlots?: Prisma.IntWithAggregatesFilter<"ContributionCycle"> | number
+  hiddenNumbers?: Prisma.IntNullableListFilter<"ContributionCycle">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ContributionCycle"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ContributionCycle"> | Date | string
 }
@@ -356,6 +368,7 @@ export type ContributionCycleCreateInput = {
   status?: $Enums.CycleStatus
   paymentDeadlineDay?: number
   totalSlots?: number
+  hiddenNumbers?: Prisma.ContributionCycleCreatehiddenNumbersInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationCreateNestedManyWithoutCycleInput
@@ -373,6 +386,7 @@ export type ContributionCycleUncheckedCreateInput = {
   status?: $Enums.CycleStatus
   paymentDeadlineDay?: number
   totalSlots?: number
+  hiddenNumbers?: Prisma.ContributionCycleCreatehiddenNumbersInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutCycleInput
@@ -390,6 +404,7 @@ export type ContributionCycleUpdateInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUpdateManyWithoutCycleNestedInput
@@ -407,6 +422,7 @@ export type ContributionCycleUncheckedUpdateInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutCycleNestedInput
@@ -424,6 +440,7 @@ export type ContributionCycleCreateManyInput = {
   status?: $Enums.CycleStatus
   paymentDeadlineDay?: number
   totalSlots?: number
+  hiddenNumbers?: Prisma.ContributionCycleCreatehiddenNumbersInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -438,6 +455,7 @@ export type ContributionCycleUpdateManyMutationInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -452,8 +470,17 @@ export type ContributionCycleUncheckedUpdateManyInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type IntNullableListFilter<$PrismaModel = never> = {
+  equals?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
+  has?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
+  hasEvery?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
+  hasSome?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type ContributionCycleCountOrderByAggregateInput = {
@@ -466,6 +493,7 @@ export type ContributionCycleCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   paymentDeadlineDay?: Prisma.SortOrder
   totalSlots?: Prisma.SortOrder
+  hiddenNumbers?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -473,6 +501,7 @@ export type ContributionCycleCountOrderByAggregateInput = {
 export type ContributionCycleAvgOrderByAggregateInput = {
   paymentDeadlineDay?: Prisma.SortOrder
   totalSlots?: Prisma.SortOrder
+  hiddenNumbers?: Prisma.SortOrder
 }
 
 export type ContributionCycleMaxOrderByAggregateInput = {
@@ -506,11 +535,16 @@ export type ContributionCycleMinOrderByAggregateInput = {
 export type ContributionCycleSumOrderByAggregateInput = {
   paymentDeadlineDay?: Prisma.SortOrder
   totalSlots?: Prisma.SortOrder
+  hiddenNumbers?: Prisma.SortOrder
 }
 
 export type ContributionCycleScalarRelationFilter = {
   is?: Prisma.ContributionCycleWhereInput
   isNot?: Prisma.ContributionCycleWhereInput
+}
+
+export type ContributionCycleCreatehiddenNumbersInput = {
+  set: number[]
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -527,6 +561,11 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type ContributionCycleUpdatehiddenNumbersInput = {
+  set?: number[]
+  push?: number | number[]
 }
 
 export type ContributionCycleCreateNestedOneWithoutParticipationsInput = {
@@ -581,6 +620,7 @@ export type ContributionCycleCreateWithoutParticipationsInput = {
   status?: $Enums.CycleStatus
   paymentDeadlineDay?: number
   totalSlots?: number
+  hiddenNumbers?: Prisma.ContributionCycleCreatehiddenNumbersInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentCreateNestedManyWithoutCycleInput
@@ -597,6 +637,7 @@ export type ContributionCycleUncheckedCreateWithoutParticipationsInput = {
   status?: $Enums.CycleStatus
   paymentDeadlineDay?: number
   totalSlots?: number
+  hiddenNumbers?: Prisma.ContributionCycleCreatehiddenNumbersInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCycleInput
@@ -629,6 +670,7 @@ export type ContributionCycleUpdateWithoutParticipationsInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUpdateManyWithoutCycleNestedInput
@@ -645,6 +687,7 @@ export type ContributionCycleUncheckedUpdateWithoutParticipationsInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCycleNestedInput
@@ -661,6 +704,7 @@ export type ContributionCycleCreateWithoutPaymentsInput = {
   status?: $Enums.CycleStatus
   paymentDeadlineDay?: number
   totalSlots?: number
+  hiddenNumbers?: Prisma.ContributionCycleCreatehiddenNumbersInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationCreateNestedManyWithoutCycleInput
@@ -677,6 +721,7 @@ export type ContributionCycleUncheckedCreateWithoutPaymentsInput = {
   status?: $Enums.CycleStatus
   paymentDeadlineDay?: number
   totalSlots?: number
+  hiddenNumbers?: Prisma.ContributionCycleCreatehiddenNumbersInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutCycleInput
@@ -709,6 +754,7 @@ export type ContributionCycleUpdateWithoutPaymentsInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUpdateManyWithoutCycleNestedInput
@@ -725,6 +771,7 @@ export type ContributionCycleUncheckedUpdateWithoutPaymentsInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutCycleNestedInput
@@ -741,6 +788,7 @@ export type ContributionCycleCreateWithoutPayoutsInput = {
   status?: $Enums.CycleStatus
   paymentDeadlineDay?: number
   totalSlots?: number
+  hiddenNumbers?: Prisma.ContributionCycleCreatehiddenNumbersInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationCreateNestedManyWithoutCycleInput
@@ -757,6 +805,7 @@ export type ContributionCycleUncheckedCreateWithoutPayoutsInput = {
   status?: $Enums.CycleStatus
   paymentDeadlineDay?: number
   totalSlots?: number
+  hiddenNumbers?: Prisma.ContributionCycleCreatehiddenNumbersInput | number[]
   createdAt?: Date | string
   updatedAt?: Date | string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutCycleInput
@@ -789,6 +838,7 @@ export type ContributionCycleUpdateWithoutPayoutsInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUpdateManyWithoutCycleNestedInput
@@ -805,6 +855,7 @@ export type ContributionCycleUncheckedUpdateWithoutPayoutsInput = {
   status?: Prisma.EnumCycleStatusFieldUpdateOperationsInput | $Enums.CycleStatus
   paymentDeadlineDay?: Prisma.IntFieldUpdateOperationsInput | number
   totalSlots?: Prisma.IntFieldUpdateOperationsInput | number
+  hiddenNumbers?: Prisma.ContributionCycleUpdatehiddenNumbersInput | number[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutCycleNestedInput
@@ -870,6 +921,7 @@ export type ContributionCycleSelect<ExtArgs extends runtime.Types.Extensions.Int
   status?: boolean
   paymentDeadlineDay?: boolean
   totalSlots?: boolean
+  hiddenNumbers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   participations?: boolean | Prisma.ContributionCycle$participationsArgs<ExtArgs>
@@ -888,6 +940,7 @@ export type ContributionCycleSelectCreateManyAndReturn<ExtArgs extends runtime.T
   status?: boolean
   paymentDeadlineDay?: boolean
   totalSlots?: boolean
+  hiddenNumbers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["contributionCycle"]>
@@ -902,6 +955,7 @@ export type ContributionCycleSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   status?: boolean
   paymentDeadlineDay?: boolean
   totalSlots?: boolean
+  hiddenNumbers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["contributionCycle"]>
@@ -916,11 +970,12 @@ export type ContributionCycleSelectScalar = {
   status?: boolean
   paymentDeadlineDay?: boolean
   totalSlots?: boolean
+  hiddenNumbers?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ContributionCycleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "startDate" | "endDate" | "registrationDeadline" | "numberPickingStartDate" | "status" | "paymentDeadlineDay" | "totalSlots" | "createdAt" | "updatedAt", ExtArgs["result"]["contributionCycle"]>
+export type ContributionCycleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "startDate" | "endDate" | "registrationDeadline" | "numberPickingStartDate" | "status" | "paymentDeadlineDay" | "totalSlots" | "hiddenNumbers" | "createdAt" | "updatedAt", ExtArgs["result"]["contributionCycle"]>
 export type ContributionCycleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   participations?: boolean | Prisma.ContributionCycle$participationsArgs<ExtArgs>
   payments?: boolean | Prisma.ContributionCycle$paymentsArgs<ExtArgs>
@@ -947,6 +1002,7 @@ export type $ContributionCyclePayload<ExtArgs extends runtime.Types.Extensions.I
     status: $Enums.CycleStatus
     paymentDeadlineDay: number
     totalSlots: number
+    hiddenNumbers: number[]
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["contributionCycle"]>
@@ -1384,6 +1440,7 @@ export interface ContributionCycleFieldRefs {
   readonly status: Prisma.FieldRef<"ContributionCycle", 'CycleStatus'>
   readonly paymentDeadlineDay: Prisma.FieldRef<"ContributionCycle", 'Int'>
   readonly totalSlots: Prisma.FieldRef<"ContributionCycle", 'Int'>
+  readonly hiddenNumbers: Prisma.FieldRef<"ContributionCycle", 'Int[]'>
   readonly createdAt: Prisma.FieldRef<"ContributionCycle", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ContributionCycle", 'DateTime'>
 }

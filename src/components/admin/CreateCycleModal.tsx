@@ -223,6 +223,22 @@ export default function CreateCycleModal({ isOpen, onClose, adminId }: Props) {
                     className="w-full px-4 py-3 text-black rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition-all"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Hidden / House Numbers
+                  </label>
+                  <input
+                    type="text"
+                    name="hiddenNumbers"
+                    defaultValue="1, 2"
+                    placeholder="e.g. 1, 2"
+                    className="w-full px-4 py-3 text-black rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none transition-all"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Comma-separated numbers hidden from users (defaults to 1, 2).
+                  </p>
+                </div>
               </div>
 
               {/* Info Box */}
